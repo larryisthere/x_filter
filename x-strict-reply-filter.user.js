@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X Strict Reply Regex Filter
 // @namespace    local.x.strict.reply.regex.filter
-// @version      1.5.2
+// @version      1.5.3
 // @description  Strictly filter spam/NSFW-style replies on X/Twitter status pages using normalization, regex rules, and a local spam score model.
 // @author       larryisthere
 // @license      MIT
@@ -58,45 +58,45 @@
    */
   const STRONG_FILTER_RULES = [
     {
-  name: '同城约炮资源入口类',
-  regex: /(同城约p|同城约炮|约炮入口|全推唯一约炮入口|真实同城约见|同城约见|同城约|约p)/u,
-  strictOnly: false,
-},
-{
-  name: '牵线资源自取类',
-  regex: /(全国牵线|牵线|资源自取|1-5线资源|一到五线资源|点我主页|看我主页|看我置顶|真实对接|线下真实)/u,
-  strictOnly: false,
-},
-{
-  name: '置顶主页引流类',
-  regex: /(点我主页|看我主页|主页自取|看我置顶|点我置顶|置顶.*资源|主页.*资源|主页.*入口)/u,
-  strictOnly: false,
-},
-{
-  name: '靠谱社区入口类',
-  regex: /(靠谱社区|全推唯一靠谱社区|真实同城约见|同城资源|附近资源|同城入口)/u,
-  strictOnly: false,
-},
-{
-  name: '涩播类',
-  regex: /(涩播|色播|准时涩播|今晚准时涩播|直播涩播|开播)/u,
-  strictOnly: false,
-},
-{
-  name: '母狗找主人类',
-  regex: /(母狗找主人|母狗.*主人|母狗.*找|主人.*母狗)/u,
-  strictOnly: false,
-},
-{
-  name: '无偿线下类',
-  regex: /(无偿线下|免费线下|线下无偿|线下免费|无偿约|免费约)/u,
-  strictOnly: false,
-},
-{
-  name: '短文本同城线下资源引流',
-  regex: /^(?=.{0,120}$)(?=.*(同城|线下|资源|入口|社区|主页|置顶))(?=.*(约|炮|p|真实|对接|自取|见|牵线)).*/u,
-  strictOnly: false,
-},
+      name: '同城约炮资源入口类',
+      regex: /(同城约p|同城约炮|约炮入口|全推唯一约炮入口|真实同城约见|同城约见|同城约|约p)/u,
+      strictOnly: false,
+    },
+    {
+      name: '牵线资源自取类',
+      regex: /(全国牵线|牵线|资源自取|1-5线资源|一到五线资源|点我主页|看我主页|看我置顶|真实对接|线下真实)/u,
+      strictOnly: false,
+    },
+    {
+      name: '置顶主页引流类',
+      regex: /(点我主页|看我主页|主页自取|看我置顶|点我置顶|置顶.*资源|主页.*资源|主页.*入口)/u,
+      strictOnly: false,
+    },
+    {
+      name: '靠谱社区入口类',
+      regex: /(靠谱社区|全推唯一靠谱社区|真实同城约见|同城资源|附近资源|同城入口)/u,
+      strictOnly: false,
+    },
+    {
+      name: '涩播类',
+      regex: /(涩播|色播|准时涩播|今晚准时涩播|直播涩播|开播)/u,
+      strictOnly: false,
+    },
+    {
+      name: '母狗找主人类',
+      regex: /(母狗找主人|母狗.*主人|母狗.*找|主人.*母狗)/u,
+      strictOnly: false,
+    },
+    {
+      name: '无偿线下类',
+      regex: /(无偿线下|免费线下|线下无偿|线下免费|无偿约|免费约)/u,
+      strictOnly: false,
+    },
+    {
+      name: '短文本同城线下资源引流',
+      regex: /^(?=.{0,120}$)(?=.*(同城|线下|资源|入口|社区|主页|置顶))(?=.*(约|炮|p|真实|对接|自取|见|牵线)).*/u,
+      strictOnly: false,
+    },
     {
       name: '小狗求主人抱抱类',
       regex: /小狗求主人抱抱/u,
@@ -192,6 +192,207 @@
       name: '严格：短回复带@和骚涩词',
       regex: /^(?=.{0,130}$)(?=.*@)(?=.*(骚|涩|色|约|飞机|不行了|好看|疼人|主人|哥哥|弟弟)).*/u,
       strictOnly: true,
+    },
+  ];
+
+  const TEXT_PATTERNS = {
+    mention: /@[a-z0-9_]{3,20}/i,
+    relationshipBait: /(主人|哥哥|弟弟|姐姐|妹妹|小狗|抱抱|领我|认领|疼人|疼我|宠我|搭子|会疼人|单身哥哥|单身姐姐|真人)/u,
+    actionBait: /(快来|找个|想找|在线找|来找|看她|主页|点我主页|看我主页|看我置顶|置顶|线下|私信|加我|跟你玩|想玩|陪你玩|陪我玩|来领|资源自取|真实对接|同城约见|同城|牵线|入口|社区|自取)/u,
+    nsfwBait: /(骚|sao|骚货|sao货|涩|色|好涩|好色|涩播|色播|约|约p|约炮|炮|可约|能约|日过|操过|睡过|打飞机|能冲|不行了|没她骚|她骚|母狗|无偿线下|免费线下)/u,
+    templateBait: /(小狗求主人抱抱|主人快来领我|快来领我|想找会疼人的哥哥|有弟弟线下吗|小狗在线找主人|小狗想跟你玩|找个长期搭子|比她好看的没她骚|她好涩我不行了|全国牵线|资源自取|点我主页|看我置顶|同城约p|同城约炮|真实对接|约炮入口|线下真实|靠谱社区|真实同城约见|今晚准时涩播|母狗找主人|无偿线下)/u,
+    englishJoke: /\b(?:why\s+did|i\s+tried\s+to|i\s+tried|why\s+was|why\s+is)\b/i,
+    englishPunchline: /\b(?:it\s+was|he\s+sang|she\s+sang|because|so\s+it|now\s+the)\b/i,
+    englishJokeSkeleton: /(?:whydid|whywas|whyis|itriedto|itried)/,
+    englishPunchlineSkeleton: /(?:itwas|hesang|shesang|because|soit|nowthe|nowim|itsaid|laughingstock|alreadyfull|overworked|offkey)/,
+    knownEnglishJokeSpamSkeleton: /(?:itriedtoplayfootballitrippedovertheballnowimalaughingstock|itriedtochargemyphoneitsaidimalreadyfullofyourmemes)/,
+  };
+
+  const SCORE_RULES = [
+    {
+      points: 2,
+      reason: 'very short text',
+      test: ({ length }) => length <= 40,
+    },
+    {
+      points: 1,
+      reason: 'short text',
+      test: ({ length }) => length > 40 && length <= 80,
+    },
+    {
+      points: 2,
+      reason: 'many emoji',
+      test: ({ emojiCount }) => emojiCount >= 3,
+    },
+    {
+      points: 1,
+      reason: 'has emoji',
+      test: ({ emojiCount }) => emojiCount >= 1 && emojiCount < 3,
+    },
+    {
+      points: 2,
+      reason: 'replacement markers',
+      test: ({ replacementMarkerCount }) => replacementMarkerCount >= 2,
+    },
+    {
+      points: 1,
+      reason: 'replacement marker',
+      test: ({ replacementMarkerCount }) => replacementMarkerCount === 1,
+    },
+    {
+      points: 3,
+      reason: 'contains mention',
+      test: ({ hasMention }) => hasMention,
+    },
+    {
+      points: 2,
+      reason: 'random latin suffix',
+      test: ({ hasRandomLatinSuffix }) => hasRandomLatinSuffix,
+    },
+    {
+      points: 1,
+      reason: 'random alnum suffix',
+      test: ({ hasRandomLatinSuffix, hasRandomAlphaNumSuffix }) =>
+        !hasRandomLatinSuffix && hasRandomAlphaNumSuffix,
+    },
+    {
+      points: 3,
+      reason: 'relationship bait words',
+      test: ({ text }) => TEXT_PATTERNS.relationshipBait.test(text),
+    },
+    {
+      points: 2,
+      reason: 'action bait words',
+      test: ({ text }) => TEXT_PATTERNS.actionBait.test(text),
+    },
+    {
+      points: 4,
+      reason: 'nsfw bait words',
+      test: ({ text }) => TEXT_PATTERNS.nsfwBait.test(text),
+    },
+    {
+      points: 5,
+      reason: 'known spam template',
+      test: ({ text }) => TEXT_PATTERNS.templateBait.test(text),
+    },
+    {
+      points: 7,
+      reason: 'known english joke spam template',
+      test: ({ length, latinSkeleton }) =>
+        length <= 220 && TEXT_PATTERNS.knownEnglishJokeSpamSkeleton.test(latinSkeleton),
+    },
+    {
+      points: 7,
+      reason: 'emoji obfuscated english joke template',
+      test: ({ raw, length, isLatinDominant, latinSkeleton, replacementMarkerCount, hasEmojiFlood }) =>
+        length <= 220 &&
+        isLatinDominant &&
+        (
+          TEXT_PATTERNS.englishJoke.test(raw) ||
+          TEXT_PATTERNS.englishJokeSkeleton.test(latinSkeleton)
+        ) &&
+        (
+          TEXT_PATTERNS.englishPunchline.test(raw) ||
+          TEXT_PATTERNS.englishPunchlineSkeleton.test(latinSkeleton) ||
+          replacementMarkerCount >= 1
+        ) &&
+        (hasEmojiFlood || replacementMarkerCount >= 2),
+    },
+    {
+      points: 5,
+      reason: 'latin emoji replacement spam combo',
+      test: ({ length, isLatinDominant, emojiCount, replacementMarkerCount }) =>
+        length <= 240 &&
+        isLatinDominant &&
+        emojiCount >= 3 &&
+        replacementMarkerCount >= 1,
+    },
+    {
+      points: 4,
+      reason: 'social dating bait random suffix combo',
+      test: ({ length, text, hasRandomAlphaNumSuffix }) =>
+        length <= 100 &&
+        hasRandomAlphaNumSuffix &&
+        /(真人|认识|认识一下|来个|有没有|有没|单身)/u.test(text),
+    },
+    {
+      points: 5,
+      reason: 'short puppy owner play combo',
+      test: ({ length, text }) =>
+        length <= 100 &&
+        /小狗/u.test(text) &&
+        /(主人|找主人|跟你玩|想玩|陪你玩|陪我玩|抱抱|认领|领我)/u.test(text),
+    },
+    {
+      points: 5,
+      reason: 'offline bait combo',
+      test: ({ length, text }) =>
+        length <= 100 &&
+        /线下/u.test(text) &&
+        /(哥哥|弟弟|姐姐|妹妹|玩|找|约|可约|能约|骚|sao)/u.test(text),
+    },
+    {
+      points: 5,
+      reason: 'short mention bait combo',
+      test: ({ length, text, hasMention }) =>
+        length <= 150 &&
+        hasMention &&
+        /(骚|sao|涩|色|约|飞机|不行了|好看|主人|哥哥|弟弟|小狗|疼人)/u.test(text),
+    },
+    {
+      points: 4,
+      reason: 'random suffix bait combo',
+      test: ({ length, text, hasRandomAlphaNumSuffix }) =>
+        length <= 100 &&
+        hasRandomAlphaNumSuffix &&
+        /(主人|哥哥|弟弟|姐姐|妹妹|小狗|搭子|线下|抱抱|领我|找主人|跟你玩|想玩|疼人)/u.test(text),
+    },
+    {
+      points: 5,
+      reason: 'profile nsfw bait combo',
+      test: ({ length, text }) =>
+        length <= 150 &&
+        /主页/u.test(text) &&
+        /(骚|sao|涩|色|飞机|冲|能打|不行了)/u.test(text),
+    },
+    {
+      points: 6,
+      reason: 'local dating resource bait combo',
+      test: ({ length, text }) =>
+        length <= 150 &&
+        /(同城|线下|附近|全国牵线|牵线)/u.test(text) &&
+        /(约|约p|约炮|炮|资源|入口|对接|真实|见|自取)/u.test(text),
+    },
+    {
+      points: 6,
+      reason: 'profile pinned resource bait combo',
+      test: ({ length, text }) =>
+        length <= 150 &&
+        /(主页|点我主页|看我主页|置顶|看我置顶|点我置顶)/u.test(text) &&
+        /(资源|入口|对接|自取|约|炮|涩|色|社区)/u.test(text),
+    },
+    {
+      points: 6,
+      reason: 'live nsfw bait combo',
+      test: ({ length, text }) =>
+        length <= 120 &&
+        /(涩播|色播|准时涩播|今晚准时涩播|开播|直播)/u.test(text),
+    },
+    {
+      points: 6,
+      reason: 'pet owner nsfw bait combo',
+      test: ({ length, text }) =>
+        length <= 120 &&
+        /(母狗|小狗)/u.test(text) &&
+        /(主人|找主人|认领|领我)/u.test(text),
+    },
+    {
+      points: 6,
+      reason: 'free offline dating bait combo',
+      test: ({ length, text }) =>
+        length <= 120 &&
+        /(无偿|免费)/u.test(text) &&
+        /(线下|约|约p|约炮|见|同城)/u.test(text),
     },
   ];
 
@@ -339,18 +540,9 @@
     result.reasons.push(`${reason}+${points}`);
   }
 
-  function getSpamScore(originalText) {
-    const raw = originalText || '';
+  function buildTextSignals(originalText) {
+    const raw = String(originalText || '');
     const text = normalizeTextForFilter(raw);
-
-    const result = {
-      score: 0,
-      reasons: [],
-      normalizedText: text,
-    };
-
-    if (!text) return result;
-
     const length = text.length;
     const emojiCount = countEmoji(raw);
     const replacementMarkerCount = countReplacementMarkers(raw);
@@ -358,166 +550,41 @@
     const rawCharCount = [...raw].length || 1;
     const latinSkeleton = getLatinSkeleton(raw);
 
-    const hasMention = /@[a-z0-9_]{3,20}/i.test(text);
+    const hasMention = TEXT_PATTERNS.mention.test(text);
     const hasRandomLatinSuffix = /[a-z]{1,8}$/i.test(text) && hasHan(text);
     const hasRandomAlphaNumSuffix = /[a-z0-9]{1,8}$/i.test(text) && hasHan(text);
-    const isLatinDominant = latinLetterCount >= 18 && latinLetterCount / rawCharCount >= 0.35;
-    const hasEmojiFlood = emojiCount >= 5 || emojiCount / rawCharCount >= 0.12;
+    return {
+      raw,
+      text,
+      length,
+      emojiCount,
+      replacementMarkerCount,
+      latinLetterCount,
+      rawCharCount,
+      latinSkeleton,
+      hasMention,
+      hasRandomLatinSuffix,
+      hasRandomAlphaNumSuffix,
+      isLatinDominant: latinLetterCount >= 18 && latinLetterCount / rawCharCount >= 0.35,
+      hasEmojiFlood: emojiCount >= 5 || emojiCount / rawCharCount >= 0.12,
+    };
+  }
 
-    const relationshipBait = /(主人|哥哥|弟弟|姐姐|妹妹|小狗|抱抱|领我|认领|疼人|疼我|宠我|搭子|会疼人|单身哥哥|单身姐姐|真人)/u;
-    const actionBait = /(快来|找个|想找|在线找|来找|看她|主页|点我主页|看我主页|看我置顶|置顶|线下|私信|加我|跟你玩|想玩|陪你玩|陪我玩|来领|资源自取|真实对接|同城约见|同城|牵线|入口|社区|自取)/u;
-    const nsfwBait = /(骚|sao|骚货|sao货|涩|色|好涩|好色|涩播|色播|约|约p|约炮|炮|可约|能约|日过|操过|睡过|打飞机|能冲|不行了|没她骚|她骚|母狗|无偿线下|免费线下)/u;
-    const templateBait = /(小狗求主人抱抱|主人快来领我|快来领我|想找会疼人的哥哥|有弟弟线下吗|小狗在线找主人|小狗想跟你玩|找个长期搭子|比她好看的没她骚|她好涩我不行了|全国牵线|资源自取|点我主页|看我置顶|同城约p|同城约炮|真实对接|约炮入口|线下真实|靠谱社区|真实同城约见|今晚准时涩播|母狗找主人|无偿线下)/u;
-    const englishJokeTemplate = /\b(?:why\s+did|i\s+tried\s+to|i\s+tried|why\s+was|why\s+is)\b/i;
-    const englishPunchlineTemplate = /\b(?:it\s+was|he\s+sang|she\s+sang|because|so\s+it|now\s+the)\b/i;
-    const englishJokeSkeletonTemplate = /(?:whydid|whywas|whyis|itriedto|itried)/;
-    const englishPunchlineSkeletonTemplate = /(?:itwas|hesang|shesang|because|soit|nowthe|nowim|itsaid|laughingstock|alreadyfull|overworked|offkey)/;
-    const knownEnglishJokeSpamSkeleton = /(?:itriedtoplayfootballitrippedovertheballnowimalaughingstock|itriedtochargemyphoneitsaidimalreadyfullofyourmemes)/;
+  function getSpamScore(originalText) {
+    const signals = buildTextSignals(originalText);
 
-    if (length <= 40) addScore(result, 2, 'very short text');
-    else if (length <= 80) addScore(result, 1, 'short text');
+    const result = {
+      score: 0,
+      reasons: [],
+      normalizedText: signals.text,
+    };
 
-    if (emojiCount >= 3) addScore(result, 2, 'many emoji');
-    else if (emojiCount >= 1) addScore(result, 1, 'has emoji');
+    if (!signals.text) return result;
 
-    if (replacementMarkerCount >= 2) addScore(result, 2, 'replacement markers');
-    else if (replacementMarkerCount >= 1) addScore(result, 1, 'replacement marker');
-
-    if (hasMention) addScore(result, 3, 'contains mention');
-
-    if (hasRandomLatinSuffix) addScore(result, 2, 'random latin suffix');
-    else if (hasRandomAlphaNumSuffix) addScore(result, 1, 'random alnum suffix');
-
-    if (relationshipBait.test(text)) addScore(result, 3, 'relationship bait words');
-    if (actionBait.test(text)) addScore(result, 2, 'action bait words');
-    if (nsfwBait.test(text)) addScore(result, 4, 'nsfw bait words');
-    if (templateBait.test(text)) addScore(result, 5, 'known spam template');
-
-    if (length <= 220 && knownEnglishJokeSpamSkeleton.test(latinSkeleton)) {
-      addScore(result, 7, 'known english joke spam template');
-    }
-
-    // 高置信组合：英文短笑话模板 + emoji / 替换符混淆。
-    if (
-      length <= 220 &&
-      isLatinDominant &&
-      (englishJokeTemplate.test(raw) || englishJokeSkeletonTemplate.test(latinSkeleton)) &&
-      (
-        englishPunchlineTemplate.test(raw) ||
-        englishPunchlineSkeletonTemplate.test(latinSkeleton) ||
-        replacementMarkerCount >= 1
-      ) &&
-      (hasEmojiFlood || replacementMarkerCount >= 2)
-    ) {
-      addScore(result, 7, 'emoji obfuscated english joke template');
-    }
-
-    // 高置信组合：拉丁文本主体 + emoji 泛滥 + 替换符，常见于批量号绕过文本过滤。
-    if (
-      length <= 240 &&
-      isLatinDominant &&
-      emojiCount >= 3 &&
-      replacementMarkerCount >= 1
-    ) {
-      addScore(result, 5, 'latin emoji replacement spam combo');
-    }
-
-    // 高置信组合：短文本 + 真人/认识/单身 bait + 随机尾巴
-    if (
-      length <= 100 &&
-      hasRandomAlphaNumSuffix &&
-      /(真人|认识|认识一下|来个|有没有|有没|单身)/u.test(text)
-    ) {
-      addScore(result, 4, 'social dating bait random suffix combo');
-    }
-
-    // 高置信组合：短文本 + 小狗 + 主人/玩/找
-    if (
-      length <= 100 &&
-      /小狗/u.test(text) &&
-      /(主人|找主人|跟你玩|想玩|陪你玩|陪我玩|抱抱|认领|领我)/u.test(text)
-    ) {
-      addScore(result, 5, 'short puppy owner play combo');
-    }
-
-    // 高置信组合：短文本 + 线下 + 哥哥/弟弟/玩/约
-    if (
-      length <= 100 &&
-      /线下/u.test(text) &&
-      /(哥哥|弟弟|姐姐|妹妹|玩|找|约|可约|能约|骚|sao)/u.test(text)
-    ) {
-      addScore(result, 5, 'offline bait combo');
-    }
-
-    // 高置信组合：短文本 + @ + 色情/暧昧词
-    if (
-      length <= 150 &&
-      hasMention &&
-      /(骚|sao|涩|色|约|飞机|不行了|好看|主人|哥哥|弟弟|小狗|疼人)/u.test(text)
-    ) {
-      addScore(result, 5, 'short mention bait combo');
-    }
-
-    // 高置信组合：短文本 + 末尾随机尾巴 + 关系/线下 bait
-    if (
-      length <= 100 &&
-      hasRandomAlphaNumSuffix &&
-      /(主人|哥哥|弟弟|姐姐|妹妹|小狗|搭子|线下|抱抱|领我|找主人|跟你玩|想玩|疼人)/u.test(text)
-    ) {
-      addScore(result, 4, 'random suffix bait combo');
-    }
-
-    // 高置信组合：主页 + 性暗示
-    if (
-      length <= 150 &&
-      /主页/u.test(text) &&
-      /(骚|sao|涩|色|飞机|冲|能打|不行了)/u.test(text)
-    ) {
-      addScore(result, 5, 'profile nsfw bait combo');
-    }
-
-    // 高置信组合：短文本 + 同城/线下 + 约炮/资源/入口
-    if (
-      length <= 150 &&
-      /(同城|线下|附近|全国牵线|牵线)/u.test(text) &&
-      /(约|约p|约炮|炮|资源|入口|对接|真实|见|自取)/u.test(text)
-    ) {
-      addScore(result, 6, 'local dating resource bait combo');
-    }
-
-    // 高置信组合：主页/置顶 + 资源/入口/对接
-    if (
-      length <= 150 &&
-      /(主页|点我主页|看我主页|置顶|看我置顶|点我置顶)/u.test(text) &&
-      /(资源|入口|对接|自取|约|炮|涩|色|社区)/u.test(text)
-    ) {
-      addScore(result, 6, 'profile pinned resource bait combo');
-    }
-
-    // 高置信组合：短文本 + 涩播/直播 bait
-    if (
-      length <= 120 &&
-      /(涩播|色播|准时涩播|今晚准时涩播|开播|直播)/u.test(text)
-    ) {
-      addScore(result, 6, 'live nsfw bait combo');
-    }
-
-    // 高置信组合：母狗/主人 bait
-    if (
-      length <= 120 &&
-      /(母狗|小狗)/u.test(text) &&
-      /(主人|找主人|认领|领我)/u.test(text)
-    ) {
-      addScore(result, 6, 'pet owner nsfw bait combo');
-    }
-
-    // 高置信组合：无偿/免费 + 线下/约
-    if (
-      length <= 120 &&
-      /(无偿|免费)/u.test(text) &&
-      /(线下|约|约p|约炮|见|同城)/u.test(text)
-    ) {
-      addScore(result, 6, 'free offline dating bait combo');
+    for (const rule of SCORE_RULES) {
+      if (rule.test(signals)) {
+        addScore(result, rule.points, rule.reason);
+      }
     }
 
     return result;

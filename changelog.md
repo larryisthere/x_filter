@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.3 - 2026-05-07
+
+- Refactored spam scoring into reusable text signals and a declarative `SCORE_RULES` table.
+- Moved repeated scoring regex patterns out of per-reply evaluation.
+- Cleaned up strong-rule formatting without changing filter behavior.
+
 ## 1.5.2 - 2026-05-07
 
 - Included X emoji image `alt` text when extracting visible reply text.
