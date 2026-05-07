@@ -1,0 +1,12 @@
+# Changelog
+
+## 1.5.0 - 2026-05-07
+
+- Added detection for emoji-obfuscated English joke spam replies like the batch shown in the reference screenshot.
+- Added scoring for Unicode replacement markers combined with Latin-dominant reply text.
+- Kept the new English-template detection as a high-confidence combo rule to reduce false positives on normal English replies.
+- Added project `readme.md` and `changelog.md`.
+
+## 1.4.2
+
+- Existing strict reply regex filter with Chinese NSFW bait rules, blocked mention accounts, normalization, and local spam scoring.
