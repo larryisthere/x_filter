@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X Strict Reply Regex Filter
 // @namespace    local.x.strict.reply.regex.filter
-// @version      1.5.3
+// @version      1.5.4
 // @description  Strictly filter spam/NSFW-style replies on X/Twitter status pages using normalization, regex rules, and a local spam score model.
 // @author       larryisthere
 // @license      MIT
@@ -40,17 +40,6 @@
    * false = 直接隐藏
    */
   const SHOW_PLACEHOLDER = false;
-
-  /**
-   * 命中这些 @ 提及账号，直接隐藏。
-   * 这里匹配的是回复内容里出现的 @账号，不是回复作者账号。
-   */
-  const BLOCKED_MENTION_ACCOUNTS = [
-    'samubure',
-    'dadi2412',
-    'danitinahd',
-    'xiaonm88',
-  ];
 
   /**
    * 强规则：命中直接隐藏。
@@ -590,28 +579,9 @@
     return result;
   }
 
-  function buildMentionRegex() {
-    if (!BLOCKED_MENTION_ACCOUNTS.length) return null;
-
-    const escaped = BLOCKED_MENTION_ACCOUNTS
-      .map((name) => name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-      .join('|');
-
-    return new RegExp(`@(?:${escaped})`, 'iu');
-  }
-
-  const BLOCKED_MENTION_REGEX = buildMentionRegex();
-
   function matchRules(originalText) {
     const text = normalizeTextForFilter(originalText);
     if (!text) return null;
-
-    if (BLOCKED_MENTION_REGEX && BLOCKED_MENTION_REGEX.test(text)) {
-      return {
-        name: 'blocked mentioned account',
-        normalizedText: text,
-      };
-    }
 
     for (const rule of STRONG_FILTER_RULES) {
       if (rule.strictOnly && !STRICT_MODE) continue;

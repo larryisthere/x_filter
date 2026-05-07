@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.4 - 2026-05-07
+
+- Removed fixed mentioned-account denylist filtering because spam account IDs rotate too quickly.
+- Kept generic mention scoring as a reusable signal instead of hard-coding account IDs.
+
 ## 1.5.3 - 2026-05-07
 
 - Refactored spam scoring into reusable text signals and a declarative `SCORE_RULES` table.
@@ -26,4 +31,4 @@
 
 ## 1.4.2
 
-- Existing strict reply regex filter with Chinese NSFW bait rules, blocked mention accounts, normalization, and local spam scoring.
+- Existing strict reply regex filter with Chinese NSFW bait rules, normalization, and local spam scoring.
