@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.2 - 2026-05-07
+
+- Included X emoji image `alt` text when extracting visible reply text.
+- Added exact high-confidence coverage for the football/laughingstock and phone/memes English joke spam templates.
+
 ## 1.5.1 - 2026-05-07
 
 - Improved emoji-obfuscated English joke detection by matching a Latin-only text skeleton.

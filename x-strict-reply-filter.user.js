@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X Strict Reply Regex Filter
 // @namespace    local.x.strict.reply.regex.filter
-// @version      1.5.1
+// @version      1.5.2
 // @description  Strictly filter spam/NSFW-style replies on X/Twitter status pages using normalization, regex rules, and a local spam score model.
 // @author       larryisthere
 // @license      MIT
@@ -232,6 +232,26 @@
     );
   }
 
+  function getTextWithImageAlt(node) {
+    if (!node) return '';
+
+    if (node.nodeType === 3) {
+      return node.textContent || '';
+    }
+
+    if (node.nodeType !== 1) {
+      return '';
+    }
+
+    if (node.tagName === 'IMG' && node.alt) {
+      return ` ${node.alt} `;
+    }
+
+    return Array.from(node.childNodes || [])
+      .map(getTextWithImageAlt)
+      .join('');
+  }
+
   function getVisibleTweetText(article) {
     const tweetTextNodes = Array.from(
       article.querySelectorAll('[data-testid="tweetText"]')
@@ -239,7 +259,7 @@
 
     if (tweetTextNodes.length > 0) {
       return tweetTextNodes
-        .map((node) => node.innerText || '')
+        .map((node) => getTextWithImageAlt(node) || node.innerText || '')
         .join(' ')
         .replace(/\s+/g, ' ')
         .trim();
@@ -352,6 +372,7 @@
     const englishPunchlineTemplate = /\b(?:it\s+was|he\s+sang|she\s+sang|because|so\s+it|now\s+the)\b/i;
     const englishJokeSkeletonTemplate = /(?:whydid|whywas|whyis|itriedto|itried)/;
     const englishPunchlineSkeletonTemplate = /(?:itwas|hesang|shesang|because|soit|nowthe|nowim|itsaid|laughingstock|alreadyfull|overworked|offkey)/;
+    const knownEnglishJokeSpamSkeleton = /(?:itriedtoplayfootballitrippedovertheballnowimalaughingstock|itriedtochargemyphoneitsaidimalreadyfullofyourmemes)/;
 
     if (length <= 40) addScore(result, 2, 'very short text');
     else if (length <= 80) addScore(result, 1, 'short text');
@@ -371,6 +392,10 @@
     if (actionBait.test(text)) addScore(result, 2, 'action bait words');
     if (nsfwBait.test(text)) addScore(result, 4, 'nsfw bait words');
     if (templateBait.test(text)) addScore(result, 5, 'known spam template');
+
+    if (length <= 220 && knownEnglishJokeSpamSkeleton.test(latinSkeleton)) {
+      addScore(result, 7, 'known english joke spam template');
+    }
 
     // 高置信组合：英文短笑话模板 + emoji / 替换符混淆。
     if (
