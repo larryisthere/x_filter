@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X Strict Reply Regex Filter
 // @namespace    local.x.strict.reply.regex.filter
-// @version      1.5.4
+// @version      1.5.5
 // @description  Strictly filter spam/NSFW-style replies on X/Twitter status pages using normalization, regex rules, and a local spam score model.
 // @author       larryisthere
 // @license      MIT
@@ -13,8 +13,6 @@
 
 (function () {
   'use strict';
-
-  const STRICT_MODE = true;
 
   /**
    * true  = 主帖也参与过滤
@@ -41,155 +39,12 @@
    */
   const SHOW_PLACEHOLDER = false;
 
-  /**
-   * 强规则：命中直接隐藏。
-   * 这些规则作用于 normalized text。
-   */
-  const STRONG_FILTER_RULES = [
-    {
-      name: '同城约炮资源入口类',
-      regex: /(同城约p|同城约炮|约炮入口|全推唯一约炮入口|真实同城约见|同城约见|同城约|约p)/u,
-      strictOnly: false,
-    },
-    {
-      name: '牵线资源自取类',
-      regex: /(全国牵线|牵线|资源自取|1-5线资源|一到五线资源|点我主页|看我主页|看我置顶|真实对接|线下真实)/u,
-      strictOnly: false,
-    },
-    {
-      name: '置顶主页引流类',
-      regex: /(点我主页|看我主页|主页自取|看我置顶|点我置顶|置顶.*资源|主页.*资源|主页.*入口)/u,
-      strictOnly: false,
-    },
-    {
-      name: '靠谱社区入口类',
-      regex: /(靠谱社区|全推唯一靠谱社区|真实同城约见|同城资源|附近资源|同城入口)/u,
-      strictOnly: false,
-    },
-    {
-      name: '涩播类',
-      regex: /(涩播|色播|准时涩播|今晚准时涩播|直播涩播|开播)/u,
-      strictOnly: false,
-    },
-    {
-      name: '母狗找主人类',
-      regex: /(母狗找主人|母狗.*主人|母狗.*找|主人.*母狗)/u,
-      strictOnly: false,
-    },
-    {
-      name: '无偿线下类',
-      regex: /(无偿线下|免费线下|线下无偿|线下免费|无偿约|免费约)/u,
-      strictOnly: false,
-    },
-    {
-      name: '短文本同城线下资源引流',
-      regex: /^(?=.{0,120}$)(?=.*(同城|线下|资源|入口|社区|主页|置顶))(?=.*(约|炮|p|真实|对接|自取|见|牵线)).*/u,
-      strictOnly: false,
-    },
-    {
-      name: '小狗求主人抱抱类',
-      regex: /小狗求主人抱抱/u,
-      strictOnly: false,
-    },
-    {
-      name: '主人快来领我模板',
-      regex: /(主人快来领我|快来领我|主人.*领我|主人.*认领)/u,
-      strictOnly: false,
-    },
-    {
-      name: '疼人哥哥模板',
-      regex: /(想找会疼人的哥哥|会疼人的哥哥|疼人的哥哥|找.*疼人的哥哥)/u,
-      strictOnly: false,
-    },
-    {
-      name: '长期搭子引流',
-      regex: /(找个长期搭子|长期搭子)/u,
-      strictOnly: false,
-    },
-    {
-      name: '比她好看没她骚模板',
-      regex: /(比她好看的没她骚|比她骚的没她好看|好看的没她骚|骚的没她好看|没她骚|她骚)/u,
-      strictOnly: false,
-    },
-    {
-      name: '好涩我不行了模板',
-      regex: /(她好涩|好涩我不行了|我不行了|好涩|好色|好澀)/u,
-      strictOnly: false,
-    },
-    {
-      name: '弟弟线下模板',
-      regex: /(有弟弟线下吗|弟弟线下吗|找弟弟线下|弟弟.*线下|线下.*弟弟)/u,
-      strictOnly: false,
-    },
-    {
-      name: '小狗在线找主人模板',
-      regex: /(小狗在线找主人|小狗.*找主人|在线找主人|找主人)/u,
-      strictOnly: false,
-    },
-    {
-      name: '小狗想跟你玩模板',
-      regex: /(小狗想跟你玩|小狗.*跟你玩|小狗.*想玩|小狗.*陪你玩|小狗.*玩)/u,
-      strictOnly: false,
-    },
-    {
-      name: '线下色情引流',
-      regex: /(线下.*(骚货|sao货|骚|日过|曰过|操过|约过|可约|能约|上过|睡过))/u,
-      strictOnly: false,
-    },
-    {
-      name: '主页打飞机类',
-      regex: /(刷了半天.*主页.*打飞机|主页.*能打飞机|主页.*可以打飞机|主页.*能冲|主页.*可以冲)/u,
-      strictOnly: false,
-    },
-    {
-      name: '骚货混写',
-      regex: /(sao货|骚货|骚huo|saohuo|没人比她sao|没人比她骚)/u,
-      strictOnly: false,
-    },
-    {
-      name: '短文本带@色情引流',
-      regex: /^(?=.{0,150}$)(?=.*@)(?=.*(骚货|sao货|骚|好涩|涩|色|不行了|日过|曰过|操过|约过|打飞机|可约|能约|主页能打飞机|没她骚|她骚|好看)).*/u,
-      strictOnly: false,
-    },
-    {
-      name: '随机字母数字尾巴垃圾回复',
-      regex: /^(?=.{0,100}$).*(小狗求主人抱抱|主人快来领我|快来领我|想找会疼人的哥哥|找个长期搭子|有弟弟线下吗|小狗在线找主人|小狗想跟你玩|线下.*骚货|线下.*sao货|主页.*打飞机|比她好看的没她骚|她好涩|好涩我不行了)[a-z0-9]{0,8}$/u,
-      strictOnly: false,
-    },
-
-    {
-      name: '严格：短回复含主人恋爱引流',
-      regex: /^(?=.{0,90}$)(?=.*主人)(?=.*(领我|抱抱|快来|疼我|宠我|要我|认领|找主人)).*/u,
-      strictOnly: true,
-    },
-    {
-      name: '严格：短回复含小狗主人玩耍引流',
-      regex: /^(?=.{0,90}$)(?=.*小狗)(?=.*(主人|找主人|在线|跟你玩|想玩|陪我玩|陪你玩|抱抱|领我|认领)).*/u,
-      strictOnly: true,
-    },
-    {
-      name: '严格：短回复含哥哥弟弟线下引流',
-      regex: /^(?=.{0,90}$)(?=.*(哥哥|弟弟))(?=.*(线下|想找|会疼人|疼人|宠我|疼我|来找我|领我)).*/u,
-      strictOnly: true,
-    },
-    {
-      name: '严格：短回复含线下暧昧引流',
-      regex: /^(?=.{0,100}$)(?=.*线下)(?=.*(弟弟|哥哥|姐姐|妹妹|小狗|主人|搭子|玩|找|约|骚|sao)).*/u,
-      strictOnly: true,
-    },
-    {
-      name: '严格：短回复带@和骚涩词',
-      regex: /^(?=.{0,130}$)(?=.*@)(?=.*(骚|涩|色|约|飞机|不行了|好看|疼人|主人|哥哥|弟弟)).*/u,
-      strictOnly: true,
-    },
-  ];
-
   const TEXT_PATTERNS = {
     mention: /@[a-z0-9_]{3,20}/i,
     relationshipBait: /(主人|哥哥|弟弟|姐姐|妹妹|小狗|抱抱|领我|认领|疼人|疼我|宠我|搭子|会疼人|单身哥哥|单身姐姐|真人)/u,
     actionBait: /(快来|找个|想找|在线找|来找|看她|主页|点我主页|看我主页|看我置顶|置顶|线下|私信|加我|跟你玩|想玩|陪你玩|陪我玩|来领|资源自取|真实对接|同城约见|同城|牵线|入口|社区|自取)/u,
     nsfwBait: /(骚|sao|骚货|sao货|涩|色|好涩|好色|涩播|色播|约|约p|约炮|炮|可约|能约|日过|操过|睡过|打飞机|能冲|不行了|没她骚|她骚|母狗|无偿线下|免费线下)/u,
-    templateBait: /(小狗求主人抱抱|主人快来领我|快来领我|想找会疼人的哥哥|有弟弟线下吗|小狗在线找主人|小狗想跟你玩|找个长期搭子|比她好看的没她骚|她好涩我不行了|全国牵线|资源自取|点我主页|看我置顶|同城约p|同城约炮|真实对接|约炮入口|线下真实|靠谱社区|真实同城约见|今晚准时涩播|母狗找主人|无偿线下)/u,
+    templateBait: /(小狗求主人抱抱|主人快来领我|快来领我|主人.*领我|主人.*认领|想找会疼人的哥哥|会疼人的哥哥|疼人的哥哥|找.*疼人的哥哥|有弟弟线下吗|找弟弟线下|小狗在线找主人|小狗想跟你玩|找个长期搭子|长期搭子|比她好看的没她骚|比她骚的没她好看|好看的没她骚|骚的没她好看|没她骚|没人比她sao|没人比她骚|sao货|骚货|骚huo|她好涩|好涩我不行了|全国牵线|资源自取|1-5线资源|一到五线资源|点我主页|看我主页|主页自取|看我置顶|点我置顶|同城约p|同城约炮|真实对接|约炮入口|线下真实|靠谱社区|真实同城约见|今晚准时涩播|母狗找主人|无偿线下)/u,
     englishJoke: /\b(?:why\s+did|i\s+tried\s+to|i\s+tried|why\s+was|why\s+is)\b/i,
     englishPunchline: /\b(?:it\s+was|he\s+sang|she\s+sang|because|so\s+it|now\s+the)\b/i,
     englishJokeSkeleton: /(?:whydid|whywas|whyis|itriedto|itried)/,
@@ -582,17 +437,6 @@
   function matchRules(originalText) {
     const text = normalizeTextForFilter(originalText);
     if (!text) return null;
-
-    for (const rule of STRONG_FILTER_RULES) {
-      if (rule.strictOnly && !STRICT_MODE) continue;
-
-      if (rule.regex.test(text)) {
-        return {
-          name: rule.name,
-          normalizedText: text,
-        };
-      }
-    }
 
     const spam = getSpamScore(originalText);
 

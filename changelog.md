@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.5 - 2026-05-07
+
+- Removed the remaining hard regex filter path and unified filtering through the spam score model.
+- Migrated useful hard-rule templates into scored template signals.
+- Removed the unused strict-mode switch after hard rules were retired.
+
 ## 1.5.4 - 2026-05-07
 
 - Removed fixed mentioned-account denylist filtering because spam account IDs rotate too quickly.
