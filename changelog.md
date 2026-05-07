@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.5.7 - 2026-05-07
+
+- Added real-world regression coverage for the latest “全国安排” screenshot batch, including the one reply that should remain visible.
+- Added detection for emoji inserted inside Latin words, weird symbol clusters plus emoji, and short mixed Chinese filler replies with random Latin prefixes.
+- Added coverage for superscript Latin prefix variants like `ᶜʳᵃᶻʸ` and `ʰᵒᵖᵉ`.
+- Added exact regression coverage for the latest lazy-loaded X reply spam batch.
+
 ## 1.5.6 - 2026-05-07
 
 - Added `tests/real-world-cases.json` to preserve real user-reported spam samples by version.

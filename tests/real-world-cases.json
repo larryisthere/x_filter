@@ -79,5 +79,365 @@
     "text": "牵线",
     "expectedHidden": false,
     "expectedMaxScore": 6
+  },
+  {
+    "id": "v1.5.7-key-to-happiness",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user screenshot",
+    "text": "The key to h🔥appiness is to accept yourse🔥lf a🌻s yo🧢u are.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-greatest-joy-loved",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user screenshot",
+    "text": "The greate💎st joy i🎊n life i👍s loving and being 💼loved.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-music-programs-relaxing",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user screenshot",
+    "text": "⊗⊕⊖ I listen 💼to music programs. 🌹 They are 💖 👑very relaxing.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-computer-every-day",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user screenshot",
+    "text": "◢▻ I Do yo🚩u have a 💦comp👑uter? Yes, I do. I use it 🚀ever🧢y day.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-capable-greatness",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user screenshot",
+    "text": "You are cap☘able of🎉 g👑reatness if you bel🌱ieve.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-her-songs-beautiful",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user screenshot",
+    "text": "∂∇∂ I like her too. Her songs☘ ar🌹e💐🍁very beautiful.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-green-tea-too",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user screenshot",
+    "text": "^∨♮ Really? I should drink mo💎re g💼ree🍄n🪐 tea too.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-funny-show-too",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user screenshot",
+    "text": "∩ue🌸 I 🌞like that show to💐o. It's very funny.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-within-you-world",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user screenshot",
+    "text": "Yo🌐u 💰have within you right now, ever☀ything yo💎u nee🔥d to deal wi🪐t💰h whatever the worl🚩d can throw at you.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-dream-passion-purpose",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user screenshot",
+    "text": "Dream with passion and 🫁work with 🚩 pu🌞rpose.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-warmth-no-cold",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user screenshot",
+    "text": "sat💐isfy 赴暖而行无半分寒凉 🌐✚",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-gentle-years",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user screenshot",
+    "text": "control 岁月温💖柔从未有彷徨🌸✿",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-state-subsidy-interest-free",
+    "kind": "policy",
+    "versionIntroduced": "1.5.7",
+    "source": "user screenshot keep case",
+    "text": "叠加国补12期免息，美滋滋",
+    "expectedHidden": false,
+    "expectedMaxScore": 6
+  },
+  {
+    "id": "v1.5.7-peaceful-years",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user screenshot",
+    "text": "crazy 🌱岁月安然万事皆 👍可期★",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-peaceful-years-hope",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user screenshot",
+    "text": "🌈hope 岁月安然万事🪐皆可期☯",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-peaceful-years-superscript-crazy",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user message",
+    "text": "ᶜʳᵃᶻʸ 🌱岁月安然万事皆👍可期 ✶",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-peaceful-years-superscript-hope",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user message",
+    "text": "🌈ʰᵒᵖᵉ 岁月安然万事🪐皆可期 ✪",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-cultural-relics",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user screenshot",
+    "text": "∂∇∂ 🌻🎁 Yes, it is🍁. There are many pr🎈ecious cultural relics 🫁there.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-emoji-inside-latin-word-pattern",
+    "kind": "derived-regression",
+    "versionIntroduced": "1.5.7",
+    "source": "derived from user observation",
+    "text": "A br🔥ight id💎ea can ch🌻ange everything.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-weird-symbol-emoji-latin-pattern",
+    "kind": "derived-regression",
+    "versionIntroduced": "1.5.7",
+    "source": "derived from user observation",
+    "text": "⊗⊕⊖ I love 🌹 this 💎 simple line.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-lazy-key-to-happiness",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user lazy-load sample",
+    "text": "The key to h🔥appiness is to accept yourse🔥lf a🌻s yo🧢u are.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-lazy-greatest-joy-loved",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user lazy-load sample",
+    "text": "The greate💎st joy i🎊n life i👍s loving and being 💼loved.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-lazy-music-programs-relaxing",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user lazy-load sample",
+    "text": "⊗⊕⊖ I listen 💼to music programs.🌹 They are🍬 👑very relaxing.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-lazy-computer-every-day",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user lazy-load sample",
+    "text": "⊿∟∣ Do yo🚩u have a 💦comp👑uter? Yes, I do. I use it 🚀ever🧢y day.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-lazy-capable-greatness",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user lazy-load sample",
+    "text": "You are cap🍀able of🎉 g👑reatness if you bel🌱ieve.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-lazy-her-songs-beautiful",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user lazy-load sample",
+    "text": "∂∇∂ I like her too. Her songs🍀 ar🌹e💐 🍁very beautiful.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-lazy-green-tea-too",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user lazy-load sample",
+    "text": "∧∨∦ Really? I should drink mo💎re g💼ree🍄n🪐 tea too.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-lazy-funny-show-too",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user lazy-load sample",
+    "text": "∩∪∈🌸 I 🌞like that show to💐o. It's very funny.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-lazy-within-you-world",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user lazy-load sample",
+    "text": "Yo🌐u 💰have within you right now, ever🌟ything yo💎u nee🔥d to deal wi🪐t💰h whatever the worl🚩d can throw at you.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-lazy-dream-passion-purpose",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user lazy-load sample",
+    "text": "Dream with passion and 🍂work with🚩 pu🌞rpose.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-lazy-gentle-years-control",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user lazy-load sample",
+    "text": "ᶜᵒⁿᵗʳᵒˡ 岁月温🍬柔从未有彷徨🌸 ✿",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-lazy-warmth-satisfy",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user lazy-load sample",
+    "text": "ˢᵃᵗ💐ⁱˢᶠʸ 赴暖而行无半分寒凉 🌐✙",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-lazy-peaceful-years-crazy",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user lazy-load sample",
+    "text": "ᶜʳᵃᶻʸ 🌱岁月安然万事皆👍可期 ✶",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-lazy-peaceful-years-hope",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user lazy-load sample",
+    "text": "🌈ʰᵒᵖᵉ 岁月安然万事🪐皆可期 ✪",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-lazy-cultural-relics",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user lazy-load sample",
+    "text": "∂∇∂ 🌻🎁Yes, it is🍁. There are many pr🎈ecious cultural relics 🍂there.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-lazy-where-have-you-been",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user lazy-load sample",
+    "text": "∟∠⊥ Where hav🌻e y🌻ou been? I've been t🌻o many place🔥s.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-lazy-breeze-joy",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user lazy-load sample",
+    "text": "【✨】清风携💐喜漫过朝暮间 【✨🌞】",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-lazy-thank-you",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user lazy-load sample",
+    "text": "🧳≡≌≈ Thank you.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-lazy-gentle-years-miracle",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.7",
+    "source": "user lazy-load sample",
+    "text": "ᵐⁱʳᵃᶜˡᵉ 岁月温柔从未有👑彷🧢徨 ✙",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.7-normal-english-trailing-emoji",
+    "kind": "policy",
+    "versionIntroduced": "1.5.7",
+    "source": "derived from user observation boundary",
+    "text": "I love this idea 😊🔥🌻",
+    "expectedHidden": false,
+    "expectedMaxScore": 6
   }
 ]

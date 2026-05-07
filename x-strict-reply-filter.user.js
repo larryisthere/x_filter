@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X Strict Reply Regex Filter
 // @namespace    local.x.strict.reply.regex.filter
-// @version      1.5.6
+// @version      1.5.7
 // @description  Strictly filter spam/NSFW-style replies on X/Twitter status pages using normalization, regex rules, and a local spam score model.
 // @author       larryisthere
 // @license      MIT
@@ -50,6 +50,8 @@
     englishJokeSkeleton: /(?:whydid|whywas|whyis|itriedto|itried)/,
     englishPunchlineSkeleton: /(?:itwas|hesang|shesang|because|soit|nowthe|nowim|itsaid|laughingstock|alreadyfull|overworked|offkey)/,
     knownEnglishJokeSpamSkeleton: /(?:itriedtoplayfootballitrippedovertheballnowimalaughingstock|itriedtochargemyphoneitsaidimalreadyfullofyourmemes)/,
+    chineseFillerTemplate: /(赴暖而行无半分寒凉|岁月温柔从未有彷徨|岁月安然万事皆可期|清风携喜漫过朝暮间)/u,
+    weirdSymbolCluster: /[⊿∟∣⊗⊕⊖∂∇∧∨∦∩∪∈∠⊥≡≌≈]{2,}/u,
   };
 
   const SCORE_RULES = [
@@ -92,6 +94,11 @@
       points: 2,
       reason: 'random latin suffix',
       test: ({ hasRandomLatinSuffix }) => hasRandomLatinSuffix,
+    },
+    {
+      points: 2,
+      reason: 'random latin prefix',
+      test: ({ hasRandomLatinPrefix }) => hasRandomLatinPrefix,
     },
     {
       points: 1,
@@ -150,6 +157,50 @@
         isLatinDominant &&
         emojiCount >= 3 &&
         replacementMarkerCount >= 1,
+    },
+    {
+      points: 7,
+      reason: 'emoji inside latin word spam',
+      test: ({ length, isLatinDominant, emojiCount, emojiInsideLatinWordCount, hasWeirdSymbolCluster }) =>
+        length <= 260 &&
+        isLatinDominant &&
+        emojiInsideLatinWordCount >= 1 &&
+        (emojiInsideLatinWordCount >= 2 || emojiCount >= 2 || hasWeirdSymbolCluster),
+    },
+    {
+      points: 7,
+      reason: 'weird symbol emoji latin spam combo',
+      test: ({ length, isLatinDominant, emojiCount, hasWeirdSymbolCluster }) =>
+        length <= 240 &&
+        isLatinDominant &&
+        hasWeirdSymbolCluster &&
+        emojiCount >= 2,
+    },
+    {
+      points: 6,
+      reason: 'short weird symbol emoji filler combo',
+      test: ({ length, latinLetterCount, emojiCount, hasWeirdSymbolCluster }) =>
+        length <= 50 &&
+        latinLetterCount >= 6 &&
+        hasWeirdSymbolCluster &&
+        emojiCount >= 1,
+    },
+    {
+      points: 7,
+      reason: 'known chinese filler spam template',
+      test: ({ length, text, emojiCount, hasRandomLatinPrefix }) =>
+        length <= 100 &&
+        TEXT_PATTERNS.chineseFillerTemplate.test(text) &&
+        (emojiCount >= 1 || hasRandomLatinPrefix),
+    },
+    {
+      points: 6,
+      reason: 'random latin prefix chinese emoji combo',
+      test: ({ length, hasRandomLatinPrefix, emojiCount, emojiAdjacentToHanCount }) =>
+        length <= 100 &&
+        hasRandomLatinPrefix &&
+        emojiCount >= 1 &&
+        emojiAdjacentToHanCount >= 1,
     },
     {
       points: 4,
@@ -344,7 +395,7 @@
       .replace(/sao貨/g, 'sao货')
 
       // emoji / 符号转义
-      .replace(/[✈🛩]/g, '飞机')
+      .replace(/[✈🛩]/gu, '飞机')
 
       // 只保留中文、英文、数字、@
       .replace(/[^\p{Script=Han}a-zA-Z0-9@]/gu, '')
@@ -366,6 +417,56 @@
 
   function countLatinLetters(text) {
     return (String(text || '').match(/[a-z]/gi) || []).length;
+  }
+
+  function isEmojiChar(ch) {
+    try {
+      return /\p{Extended_Pictographic}/u.test(ch);
+    } catch {
+      return false;
+    }
+  }
+
+  function isLatinLetter(ch) {
+    return /[a-z]/i.test(ch || '');
+  }
+
+  function isHanChar(ch) {
+    return /\p{Script=Han}/u.test(ch || '');
+  }
+
+  function countEmojiAdjacentTo(text, isNeighborChar) {
+    const chars = [...String(text || '')];
+    let count = 0;
+
+    chars.forEach((ch, index) => {
+      if (!isEmojiChar(ch)) return;
+
+      const prev = chars[index - 1] || '';
+      const next = chars[index + 1] || '';
+      if (isNeighborChar(prev) || isNeighborChar(next)) {
+        count += 1;
+      }
+    });
+
+    return count;
+  }
+
+  function countEmojiInsideLatinWord(text) {
+    const chars = [...String(text || '')];
+    let count = 0;
+
+    chars.forEach((ch, index) => {
+      if (!isEmojiChar(ch)) return;
+
+      const prev = chars[index - 1] || '';
+      const next = chars[index + 1] || '';
+      if (isLatinLetter(prev) && isLatinLetter(next)) {
+        count += 1;
+      }
+    });
+
+    return count;
   }
 
   function getLatinSkeleton(text) {
@@ -393,8 +494,12 @@
     const latinLetterCount = countLatinLetters(raw);
     const rawCharCount = [...raw].length || 1;
     const latinSkeleton = getLatinSkeleton(raw);
+    const emojiInsideLatinWordCount = countEmojiInsideLatinWord(raw);
+    const emojiAdjacentToHanCount = countEmojiAdjacentTo(raw, isHanChar);
 
     const hasMention = TEXT_PATTERNS.mention.test(text);
+    const hasWeirdSymbolCluster = TEXT_PATTERNS.weirdSymbolCluster.test(raw);
+    const hasRandomLatinPrefix = /^[a-z]{2,10}(?=\p{Script=Han})/u.test(text);
     const hasRandomLatinSuffix = /[a-z]{1,8}$/i.test(text) && hasHan(text);
     const hasRandomAlphaNumSuffix = /[a-z0-9]{1,8}$/i.test(text) && hasHan(text);
     return {
@@ -406,7 +511,11 @@
       latinLetterCount,
       rawCharCount,
       latinSkeleton,
+      emojiInsideLatinWordCount,
+      emojiAdjacentToHanCount,
       hasMention,
+      hasWeirdSymbolCluster,
+      hasRandomLatinPrefix,
       hasRandomLatinSuffix,
       hasRandomAlphaNumSuffix,
       isLatinDominant: latinLetterCount >= 18 && latinLetterCount / rawCharCount >= 0.35,
