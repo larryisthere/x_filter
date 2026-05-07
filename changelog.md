@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.6 - 2026-05-07
+
+- Added `tests/real-world-cases.json` to preserve real user-reported spam samples by version.
+- Added `tests/run-real-world-cases.js` so filter changes can be checked against accumulated samples.
+- Documented the real-world regression test workflow.
+
 ## 1.5.5 - 2026-05-07
 
 - Removed the remaining hard regex filter path and unified filtering through the spam score model.

@@ -1,0 +1,83 @@
+[
+  {
+    "id": "v1.5.0-dress-up-for-work",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.0",
+    "source": "user screenshot",
+    "text": "💼👔👕 I tried 🌐o dress up for work. I put on tw👍o different s💰ocks 🎉—f🧳ashion statement🫁�💎�👗👕",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.0-laptop-overworked",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.0",
+    "source": "user screenshot",
+    "text": "💻🖥�🌹☂️� Why did 💎the laptop g🌸et mad? It wa🎁s overworked. 📱💾💿",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.0-singer-off-key",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.0",
+    "source": "user screenshot",
+    "text": "🎤🎧🎵 Why did the singer g🌻et booed? He 🌈sang off-key. 🎵�☂️�",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.2-football-laughingstock",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.2",
+    "source": "user message",
+    "text": "💎⚽🏀🏈 I tried to play footbal🎉l. I trip🌟ped over the b🚀all—now I🌞’m 🧢a laughings🧳tock. 🏐🏉🎾",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.2-phone-memes",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.2",
+    "source": "user message",
+    "text": "🔋🔌🔍 I tried to charge my p🎊hone🚩. 🍁It s🌱aid, “I’m 🍄al🔥ready full of your memes.” 🔦💡💨",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.2-football-laughingstock-no-emoji",
+    "kind": "derived-regression",
+    "versionIntroduced": "1.5.2",
+    "source": "derived from user message",
+    "text": "I tried to play football. I tripped over the ball—now I’m a laughingstock.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.2-phone-memes-no-emoji",
+    "kind": "derived-regression",
+    "versionIntroduced": "1.5.2",
+    "source": "derived from user message",
+    "text": "I tried to charge my phone. It said, “I’m already full of your memes.”",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.4-mentioned-account-alone",
+    "kind": "policy",
+    "versionIntroduced": "1.5.4",
+    "source": "user policy decision",
+    "text": "@samubure hello",
+    "expectedHidden": false,
+    "expectedMaxScore": 6
+  },
+  {
+    "id": "v1.5.5-broad-traction-word",
+    "kind": "policy",
+    "versionIntroduced": "1.5.5",
+    "source": "hard-rule migration boundary",
+    "text": "牵线",
+    "expectedHidden": false,
+    "expectedMaxScore": 6
+  }
+]
