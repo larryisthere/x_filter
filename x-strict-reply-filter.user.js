@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X Strict Reply Regex Filter
 // @namespace    local.x.strict.reply.regex.filter
-// @version      1.5.0
+// @version      1.5.1
 // @description  Strictly filter spam/NSFW-style replies on X/Twitter status pages using normalization, regex rules, and a local spam score model.
 // @author       larryisthere
 // @license      MIT
@@ -303,6 +303,13 @@
     return (String(text || '').match(/[a-z]/gi) || []).length;
   }
 
+  function getLatinSkeleton(text) {
+    return String(text || '')
+      .normalize('NFKC')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '');
+  }
+
   function hasHan(text) {
     return /\p{Script=Han}/u.test(text);
   }
@@ -329,6 +336,7 @@
     const replacementMarkerCount = countReplacementMarkers(raw);
     const latinLetterCount = countLatinLetters(raw);
     const rawCharCount = [...raw].length || 1;
+    const latinSkeleton = getLatinSkeleton(raw);
 
     const hasMention = /@[a-z0-9_]{3,20}/i.test(text);
     const hasRandomLatinSuffix = /[a-z]{1,8}$/i.test(text) && hasHan(text);
@@ -342,6 +350,8 @@
     const templateBait = /(小狗求主人抱抱|主人快来领我|快来领我|想找会疼人的哥哥|有弟弟线下吗|小狗在线找主人|小狗想跟你玩|找个长期搭子|比她好看的没她骚|她好涩我不行了|全国牵线|资源自取|点我主页|看我置顶|同城约p|同城约炮|真实对接|约炮入口|线下真实|靠谱社区|真实同城约见|今晚准时涩播|母狗找主人|无偿线下)/u;
     const englishJokeTemplate = /\b(?:why\s+did|i\s+tried\s+to|i\s+tried|why\s+was|why\s+is)\b/i;
     const englishPunchlineTemplate = /\b(?:it\s+was|he\s+sang|she\s+sang|because|so\s+it|now\s+the)\b/i;
+    const englishJokeSkeletonTemplate = /(?:whydid|whywas|whyis|itriedto|itried)/;
+    const englishPunchlineSkeletonTemplate = /(?:itwas|hesang|shesang|because|soit|nowthe|nowim|itsaid|laughingstock|alreadyfull|overworked|offkey)/;
 
     if (length <= 40) addScore(result, 2, 'very short text');
     else if (length <= 80) addScore(result, 1, 'short text');
@@ -366,8 +376,12 @@
     if (
       length <= 220 &&
       isLatinDominant &&
-      englishJokeTemplate.test(raw) &&
-      (englishPunchlineTemplate.test(raw) || replacementMarkerCount >= 1) &&
+      (englishJokeTemplate.test(raw) || englishJokeSkeletonTemplate.test(latinSkeleton)) &&
+      (
+        englishPunchlineTemplate.test(raw) ||
+        englishPunchlineSkeletonTemplate.test(latinSkeleton) ||
+        replacementMarkerCount >= 1
+      ) &&
       (hasEmojiFlood || replacementMarkerCount >= 2)
     ) {
       addScore(result, 7, 'emoji obfuscated english joke template');

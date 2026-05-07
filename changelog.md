@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.1 - 2026-05-07
+
+- Improved emoji-obfuscated English joke detection by matching a Latin-only text skeleton.
+- Added coverage for `now I'm`, `it said`, `laughingstock`, and `already full` joke-spam variants.
+
 ## 1.5.0 - 2026-05-07
 
 - Added detection for emoji-obfuscated English joke spam replies like the batch shown in the reference screenshot.
