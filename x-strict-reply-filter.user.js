@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X Strict Reply Regex Filter
 // @namespace    local.x.strict.reply.regex.filter
-// @version      1.5.9
+// @version      1.5.10
 // @description  Strictly filter spam/NSFW-style replies on X/Twitter status pages using normalization, regex rules, and a local spam score model.
 // @author       larryisthere
 // @license      MIT
@@ -51,12 +51,11 @@
     englishPunchlineSkeleton: /(?:itwas|hesang|shesang|because|soit|nowthe|nowim|itsaid|laughingstock|alreadyfull|overworked|offkey)/,
     knownEnglishJokeSpamSkeleton: /(?:itriedtoplayfootballitrippedovertheballnowimalaughingstock|itriedtochargemyphoneitsaidimalreadyfullofyourmemes)/,
     chineseFillerTemplate: /(赴暖而行无半分寒凉|岁月温柔从未有彷徨|岁月安然万事皆可期|清风携喜漫过朝暮间|风暖岁安事事皆顺遂)/u,
-    weirdSymbolCluster: /[⊿∟∣⊗⊕⊖∂∇∧∨∦∩∪∈∠⊥≡≌≈]{2,}/u,
   };
 
   const PROFILE_PATTERNS = {
-    datingBait: /(无偿|免费|骚|sao|单男|找单男|想找单男|线下|chu男|处男)/u,
-    strongDatingBait: /(想找单男|找单男|无偿线下|免费线下|chu男无偿|处男无偿|无偿.*线下|线下.*无偿)/u,
+    datingBait: /(无偿|免费|骚|sao|涩|涩播|单男|找单男|想找单男|线下|chu男|处男|破处|固炮|合欢宗|母狗|找主人|全国安排)/u,
+    strongDatingBait: /(想找单男|找单男|无偿线下|免费线下|chu男无偿|处男无偿|无偿.*线下|线下.*无偿|免费破处|破处|准时涩播|涩播|固炮|合欢宗|母狗找主人|母狗.*主人|全国安排)/u,
   };
 
   const SCORE_RULES = [
@@ -178,30 +177,20 @@
     },
     {
       points: 7,
-      reason: 'emoji inside latin word spam',
-      test: ({ length, isLatinDominant, emojiCount, emojiInsideLatinWordCount, hasWeirdSymbolCluster }) =>
+      reason: 'emoji broken latin word',
+      test: ({ length, isLatinDominant, emojiInsideLatinWordCount }) =>
         length <= 260 &&
         isLatinDominant &&
-        emojiInsideLatinWordCount >= 1 &&
-        (emojiInsideLatinWordCount >= 2 || emojiCount >= 2 || hasWeirdSymbolCluster),
+        emojiInsideLatinWordCount >= 1,
     },
     {
       points: 7,
-      reason: 'weird symbol emoji latin spam combo',
-      test: ({ length, isLatinDominant, emojiCount, hasWeirdSymbolCluster }) =>
-        length <= 240 &&
-        isLatinDominant &&
-        hasWeirdSymbolCluster &&
-        emojiCount >= 2,
-    },
-    {
-      points: 6,
-      reason: 'short weird symbol emoji filler combo',
-      test: ({ length, latinLetterCount, emojiCount, hasWeirdSymbolCluster }) =>
-        length <= 50 &&
+      reason: 'latin emoji non-latin decoration combo',
+      test: ({ length, latinLetterCount, emojiCount, suspiciousNonLatinDecorationCount }) =>
+        length <= 260 &&
         latinLetterCount >= 6 &&
-        hasWeirdSymbolCluster &&
-        emojiCount >= 1,
+        emojiCount >= 1 &&
+        suspiciousNonLatinDecorationCount >= 2,
     },
     {
       points: 7,
@@ -383,7 +372,7 @@
     }
 
     if (node.tagName === 'IMG' && node.alt) {
-      return ` ${node.alt} `;
+      return node.alt;
     }
 
     return Array.from(node.childNodes || [])
@@ -525,6 +514,27 @@
     return count;
   }
 
+  function isLatinScriptChar(ch) {
+    return /\p{Script=Latin}/u.test(ch || '');
+  }
+
+  function isCommonTextSeparator(ch) {
+    return /[\s.,!?;:'"()[\]{}<>/\\|@#$%&*_+=~`^\-—，。！？、：；“”‘’（）《》【】「」『』…]/u.test(ch || '');
+  }
+
+  function isSuspiciousNonLatinDecorationChar(ch) {
+    return Boolean(ch) &&
+      !isEmojiChar(ch) &&
+      !isHanChar(ch) &&
+      !isLatinScriptChar(ch) &&
+      !/\p{Number}/u.test(ch) &&
+      !isCommonTextSeparator(ch);
+  }
+
+  function countSuspiciousNonLatinDecorationChars(text) {
+    return [...String(text || '')].filter(isSuspiciousNonLatinDecorationChar).length;
+  }
+
   function getLatinSkeleton(text) {
     return String(text || '')
       .normalize('NFKC')
@@ -551,10 +561,11 @@
     const rawCharCount = [...raw].length || 1;
     const latinSkeleton = getLatinSkeleton(raw);
     const emojiInsideLatinWordCount = countEmojiInsideLatinWord(raw);
+    const emojiAdjacentToLatinCount = countEmojiAdjacentTo(raw, isLatinLetter);
     const emojiAdjacentToHanCount = countEmojiAdjacentTo(raw, isHanChar);
+    const suspiciousNonLatinDecorationCount = countSuspiciousNonLatinDecorationChars(raw);
 
     const hasMention = TEXT_PATTERNS.mention.test(text);
-    const hasWeirdSymbolCluster = TEXT_PATTERNS.weirdSymbolCluster.test(raw);
     const hasRandomLatinPrefix = /^[a-z]{2,10}(?=\p{Script=Han})/u.test(text);
     const hasRandomLatinSuffix = /[a-z]{1,8}$/i.test(text) && hasHan(text);
     const hasRandomAlphaNumSuffix = /[a-z0-9]{1,8}$/i.test(text) && hasHan(text);
@@ -568,9 +579,10 @@
       rawCharCount,
       latinSkeleton,
       emojiInsideLatinWordCount,
+      emojiAdjacentToLatinCount,
       emojiAdjacentToHanCount,
+      suspiciousNonLatinDecorationCount,
       hasMention,
-      hasWeirdSymbolCluster,
       hasRandomLatinPrefix,
       hasRandomLatinSuffix,
       hasRandomAlphaNumSuffix,

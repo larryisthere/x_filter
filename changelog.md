@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.5.10 - 2026-05-08
+
+- Added stronger display-nickname scoring for adult-service bait such as `免费破处`, `涩播`, `固炮`, `合欢宗`, `母狗找主人`, and `全国安排`.
+- Tightened emoji-obfuscated English detection around emoji breaking English words rather than the English phrase content itself.
+- Added a high-confidence combo for Latin text plus emoji plus non-Latin decorative characters such as Coptic/Tibetan wrappers.
+- Removed the old fixed weird-symbol cluster rules after folding them into the generic non-Latin decoration signal.
+- Preserved emoji adjacency when extracting X image emoji alt text so `Lo🌹nel`-style broken words still reach the scorer as broken words.
+- Added regression coverage for the latest screenshot batch, including both emoji-broken English filler and adult-bait nicknames paired with generic English text.
+
 ## 1.5.9 - 2026-05-08
 
 - Added detection for very short digit/emoji/Latin-code reply spam like `9💗🥰✨🧡7`.

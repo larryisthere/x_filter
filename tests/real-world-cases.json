@@ -602,5 +602,193 @@
     "text": "2026🎉🎉🎉🎉",
     "expectedHidden": false,
     "expectedMaxScore": 6
+  },
+  {
+    "id": "v1.5.10-profile-free-virginity-emoji-only",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.10",
+    "source": "user screenshot",
+    "authorName": "岑望娟❤️免费破处❤️",
+    "text": "🔕\n🐬\n🎸\n☂️",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.10-arrange-casual-lazy-attitude",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.10",
+    "source": "user screenshot",
+    "authorName": "Abzsincr",
+    "text": "ᵎᵐᵘᶰ Casual lazy at 🚩titude 🎉reduces life’s 🎴anx🍄iety ყɯʊᵎᵎ",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.10-arrange-being-alone-trivia",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.10",
+    "source": "user screenshot",
+    "authorName": "Idyespq",
+    "text": "——૨⁴🎭⁴ 🍬 🌐like being alone without trivia👑l troubles ƴɣW——",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.10-arrange-loneliness-freedom",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.10",
+    "source": "user screenshot",
+    "authorName": "Jcgts",
+    "text": "∘Ѵiδϒ Lo🌹nel🚀iness is a kind of 👑elegant fre🌞edom بلخار⦂",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.10-arrange-slow-rhythm-calm",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.10",
+    "source": "user screenshot",
+    "authorName": "Byhifk",
+    "text": "Ꞙҩɱɱ Slow rhyt💎 🚩hm calm🌺s 💎al inner impetuosity գɭɱꞘ",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.10-arrange-take-it-easy",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.10",
+    "source": "user screenshot",
+    "authorName": "Fhlxrm",
+    "text": "╟ 🪐Tak🏀e it easy, everything comes in tim🌟e 🚀 ╟",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.10-arrange-waste-time-unworthy",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.10",
+    "source": "user screenshot",
+    "authorName": "Ihyegpu",
+    "text": "—— ♝♝ Don’t wa🔥ste ti🌻me on unworthy🔥 people ♝♝🍄——",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.10-arrange-quiet-solitude-sadness",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.10",
+    "source": "user screenshot",
+    "authorName": "Nkdhefl",
+    "text": "# 🧳⟧Ⅲ Qui🪐et solitud🌈e heals all trivia☘l sadness",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.10-arrange-quiet-loneliness-scars",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.10",
+    "source": "user screenshot",
+    "authorName": "Nzrab",
+    "text": "——⌁ʍʍ Quiet loneliness heals 💦a🌟ll scars 🍬⊙⊙——",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.10-profile-fixed-hookup-gym",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.10",
+    "source": "user screenshot",
+    "authorName": "媛婷固炮🥂",
+    "text": "4. I need to hit the gym later today.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.10-profile-live-stream-time-flies",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.10",
+    "source": "user screenshot",
+    "authorName": "今晚准时涩播🍺",
+    "text": "12. Time flies when you’re having fun.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.10-profile-live-stream-early-bird",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.10",
+    "source": "user screenshot",
+    "authorName": "今晚准时涩播🦶",
+    "text": "1. The early bird catches the worm.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.10-profile-hehuanzong-train-wreck",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.10",
+    "source": "user screenshot",
+    "authorName": "合欢宗倩倩🚗",
+    "text": "22. The meeting was a total train wreck.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.10-profile-hehuanzong-gut-feeling",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.10",
+    "source": "user screenshot",
+    "authorName": "合欢宗媛婷🛢",
+    "text": "10. I have a gut feeling about this.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.10-profile-seek-fixed-hookup-costs-arm-leg",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.10",
+    "source": "user screenshot",
+    "authorName": "寻固炮💅",
+    "text": "19. It costs an arm and a leg to live here.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.10-profile-dog-owner-chickens",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.10",
+    "source": "user screenshot",
+    "authorName": "母狗找主人🍚",
+    "text": "9. Don’t count your chickens before they hatch.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.10-profile-hehuanzong-touch-base",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.10",
+    "source": "user screenshot",
+    "authorName": "合欢宗圣女🥁",
+    "text": "30. Let’s touch base again next",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.10-single-broken-english-word",
+    "kind": "derived-regression",
+    "versionIntroduced": "1.5.10",
+    "source": "derived from user policy decision",
+    "text": "I fixed th🔥is typo today.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.10-coptic-tibetan-decoration-loneliness",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.10",
+    "source": "user message",
+    "text": "༛ꚡꚢꚣ Lo🌹nel🚀iness is a kind of 👑elegant fre🌞edom ꚤꚥꚦ༜",
+    "expectedHidden": true,
+    "expectedMinScore": 7
   }
 ]

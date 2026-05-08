@@ -8,7 +8,7 @@ const casesPath = path.join(__dirname, 'real-world-cases.json');
 
 const source = fs
   .readFileSync(scriptPath, 'utf8')
-  .replace(/\}\)\(\);\s*$/, 'globalThis.__xFilterTest = { getSpamScore, matchRules };\n})();');
+  .replace(/\}\)\(\);\s*$/, 'globalThis.__xFilterTest = { getSpamScore, getTextWithImageAlt, matchRules };\n})();');
 
 const sandbox = {
   console,
@@ -35,6 +35,22 @@ vm.runInContext(source, sandbox, { filename: scriptPath });
 
 const cases = JSON.parse(fs.readFileSync(casesPath, 'utf8'));
 let failures = 0;
+
+function textNode(text) {
+  return {
+    nodeType: 3,
+    textContent: text,
+  };
+}
+
+function elementNode(tagName, childNodes = [], alt = '') {
+  return {
+    nodeType: 1,
+    tagName,
+    alt,
+    childNodes,
+  };
+}
 
 for (const testCase of cases) {
   const context = {
@@ -71,6 +87,23 @@ for (const testCase of cases) {
   } else {
     console.log(`PASS ${testCase.id}: score=${score.score}, hidden=${hidden}`);
   }
+}
+
+const extractedBrokenWord = sandbox.__xFilterTest.getTextWithImageAlt(
+  elementNode('SPAN', [
+    textNode('Lo'),
+    elementNode('IMG', [], '🌹'),
+    textNode('nel'),
+    elementNode('IMG', [], '🚀'),
+    textNode('iness'),
+  ])
+);
+
+if (extractedBrokenWord !== 'Lo🌹nel🚀iness') {
+  failures += 1;
+  console.error(`FAIL emoji DOM extraction: got ${JSON.stringify(extractedBrokenWord)}`);
+} else {
+  console.log('PASS emoji DOM extraction: preserves broken English word adjacency');
 }
 
 if (failures > 0) {
