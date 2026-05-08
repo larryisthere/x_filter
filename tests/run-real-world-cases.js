@@ -37,8 +37,11 @@ const cases = JSON.parse(fs.readFileSync(casesPath, 'utf8'));
 let failures = 0;
 
 for (const testCase of cases) {
-  const matched = sandbox.__xFilterTest.matchRules(testCase.text);
-  const score = sandbox.__xFilterTest.getSpamScore(testCase.text);
+  const context = {
+    authorName: testCase.authorName || '',
+  };
+  const matched = sandbox.__xFilterTest.matchRules(testCase.text, context);
+  const score = sandbox.__xFilterTest.getSpamScore(testCase.text, context);
   const hidden = Boolean(matched);
   const errors = [];
 

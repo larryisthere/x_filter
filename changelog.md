@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.5.9 - 2026-05-08
+
+- Added detection for very short digit/emoji/Latin-code reply spam like `9💗🥰✨🧡7`.
+- Added display-nickname scoring for bait phrases such as `想找单男`, `无偿线下`, `单男`, `骚`, and `线下`.
+- Added regression coverage for the latest short-code reply batch and nickname-only bait filtering.
+
+## 1.5.8 - 2026-05-07
+
+- Added coverage for the `风暖岁安事事皆顺遂` short Chinese filler spam variant.
+- Added regression cases for repeated emoji-obfuscated English filler samples reported after lazy loading.
+
 ## 1.5.7 - 2026-05-07
 
 - Added real-world regression coverage for the latest “全国安排” screenshot batch, including the one reply that should remain visible.

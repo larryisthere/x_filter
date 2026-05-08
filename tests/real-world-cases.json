@@ -439,5 +439,168 @@
     "text": "I love this idea 😊🔥🌻",
     "expectedHidden": false,
     "expectedMaxScore": 6
+  },
+  {
+    "id": "v1.5.8-warm-wind-smooth-days",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.8",
+    "source": "user message",
+    "text": "「🌟」🌱风暖岁安事事皆顺遂 「�🍀�」",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.8-dream-passion-purpose-repeat",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.8",
+    "source": "user message",
+    "text": "Dream with passion and 🍂work with🚩 pu🌞rpose.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.8-within-you-world-repeat",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.8",
+    "source": "user message",
+    "text": "Yo🌐u 💰have within you right now, ever🌟ything yo💎u nee🔥d to deal wi🪐t💰h whatever the worl🚩d can throw at you.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.8-capable-greatness-repeat",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.8",
+    "source": "user message",
+    "text": "You are cap🍀able of🎉 g👑reatness if you bel🌱ieve.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.8-key-to-happiness-repeat",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.8",
+    "source": "user message",
+    "text": "The key to h🔥appiness is to accept yourse🔥lf a🌻s yo🧢u are.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.8-greatest-joy-loved-repeat",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.8",
+    "source": "user message",
+    "text": "The greate💎st joy i🎊n life i👍s loving and being 💼loved.",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.9-short-digit-emoji-code-ute",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.9",
+    "source": "user screenshot",
+    "authorName": "采妍🌸宇宙第一骚🌸",
+    "text": "9💝🤭‌😈💞UTe",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.9-short-digit-emoji-code-afa",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.9",
+    "source": "user screenshot",
+    "authorName": "亦歆🌸想找单男🌸",
+    "text": "6💐💝🫦😍afa",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.9-short-digit-emoji-code-sv",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.9",
+    "source": "user screenshot",
+    "authorName": "依赖🌸chu男无偿🌸",
+    "text": "2💄😉👀💓sv",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.9-short-digit-emoji-code-z",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.9",
+    "source": "user screenshot",
+    "authorName": "璟诗🌸想找单男🌸",
+    "text": "6‍🌹​😋​😉💗z",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.9-short-digit-emoji-code-nine",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.9",
+    "source": "user screenshot",
+    "authorName": "璟柔🌸无偿线下🌸",
+    "text": "1🤭‌💄💐😘‍9",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.9-short-digit-emoji-code-seven",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.9",
+    "source": "user screenshot",
+    "authorName": "夏颖🌸chu男无偿🌸",
+    "text": "9💗🥰✨🧡7",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.9-short-digit-emoji-code-eo",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.9",
+    "source": "user screenshot",
+    "authorName": "瑾瑶🌸想找单男🌸",
+    "text": "9⁠😘😍🍑👙Eo",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.9-short-digit-emoji-code-ipl",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.9",
+    "source": "user screenshot",
+    "authorName": "语婉🌸chu男无偿🌸",
+    "text": "4‌🌷❣🧡💫iPL",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.9-short-digit-emoji-code-s2",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.9",
+    "source": "user screenshot",
+    "authorName": "依悦🌸宇宙第一骚🌸",
+    "text": "⁠2🌸🌷🥰👙s2",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.9-profile-strong-dating-bait-alone",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.9",
+    "source": "user message",
+    "authorName": "亦歆🌸想找单男🌸",
+    "text": "哈哈",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.9-normal-year-celebration-short-emoji",
+    "kind": "policy",
+    "versionIntroduced": "1.5.9",
+    "source": "derived false-positive boundary",
+    "text": "2026🎉🎉🎉🎉",
+    "expectedHidden": false,
+    "expectedMaxScore": 6
   }
 ]

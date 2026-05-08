@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X Strict Reply Regex Filter
 // @namespace    local.x.strict.reply.regex.filter
-// @version      1.5.7
+// @version      1.5.9
 // @description  Strictly filter spam/NSFW-style replies on X/Twitter status pages using normalization, regex rules, and a local spam score model.
 // @author       larryisthere
 // @license      MIT
@@ -50,8 +50,13 @@
     englishJokeSkeleton: /(?:whydid|whywas|whyis|itriedto|itried)/,
     englishPunchlineSkeleton: /(?:itwas|hesang|shesang|because|soit|nowthe|nowim|itsaid|laughingstock|alreadyfull|overworked|offkey)/,
     knownEnglishJokeSpamSkeleton: /(?:itriedtoplayfootballitrippedovertheballnowimalaughingstock|itriedtochargemyphoneitsaidimalreadyfullofyourmemes)/,
-    chineseFillerTemplate: /(赴暖而行无半分寒凉|岁月温柔从未有彷徨|岁月安然万事皆可期|清风携喜漫过朝暮间)/u,
+    chineseFillerTemplate: /(赴暖而行无半分寒凉|岁月温柔从未有彷徨|岁月安然万事皆可期|清风携喜漫过朝暮间|风暖岁安事事皆顺遂)/u,
     weirdSymbolCluster: /[⊿∟∣⊗⊕⊖∂∇∧∨∦∩∪∈∠⊥≡≌≈]{2,}/u,
+  };
+
+  const PROFILE_PATTERNS = {
+    datingBait: /(无偿|免费|骚|sao|单男|找单男|想找单男|线下|chu男|处男)/u,
+    strongDatingBait: /(想找单男|找单男|无偿线下|免费线下|chu男无偿|处男无偿|无偿.*线下|线下.*无偿)/u,
   };
 
   const SCORE_RULES = [
@@ -69,6 +74,19 @@
       points: 2,
       reason: 'many emoji',
       test: ({ emojiCount }) => emojiCount >= 3,
+    },
+    {
+      points: 7,
+      reason: 'short digit emoji code spam',
+      test: ({ length, text, emojiCount, latinLetterCount }) =>
+        length >= 2 &&
+        length <= 8 &&
+        /^[a-z0-9]+$/i.test(text) &&
+        /\d/.test(text) &&
+        !hasHan(text) &&
+        emojiCount >= 4 &&
+        latinLetterCount <= 4 &&
+        (latinLetterCount >= 1 || /^\d{2}$/.test(text)),
     },
     {
       points: 1,
@@ -291,6 +309,31 @@
     },
   ];
 
+  const PROFILE_SCORE_RULES = [
+    {
+      points: 7,
+      reason: 'profile strong dating bait phrase',
+      test: ({ text }) => PROFILE_PATTERNS.strongDatingBait.test(text),
+    },
+    {
+      points: 4,
+      reason: 'profile dating bait words',
+      test: ({ text }) => PROFILE_PATTERNS.datingBait.test(text),
+    },
+    {
+      points: 4,
+      reason: 'profile dating bait pair',
+      test: ({ text }) =>
+        /(想找|找|无偿|免费).*(单男|线下|chu男|处男)|(单男|线下|chu男|处男).*(想找|找|无偿|免费)/u.test(text),
+    },
+    {
+      points: 2,
+      reason: 'profile emoji dating bait wrapper',
+      test: ({ text, emojiCount }) =>
+        emojiCount >= 2 && PROFILE_PATTERNS.datingBait.test(text),
+    },
+  ];
+
   function isStatusPage() {
     return /^\/[^/]+\/status\/\d+/.test(location.pathname);
   }
@@ -362,6 +405,19 @@
     }
 
     return (article.innerText || '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function getVisibleUserNameText(article) {
+    const userName = article.querySelector('[data-testid="User-Name"]');
+    if (!userName) return '';
+
+    const displayNameLink = userName.querySelector('a[href^="/"][role="link"]');
+    const sourceNode = displayNameLink || userName;
+
+    return (getTextWithImageAlt(sourceNode) || sourceNode.innerText || '')
+      .replace(/@\w+\b.*$/u, '')
       .replace(/\s+/g, ' ')
       .trim();
   }
@@ -523,36 +579,52 @@
     };
   }
 
-  function getSpamScore(originalText) {
+  function applyScoreRules(result, signals, rules, reasonPrefix = '') {
+    for (const rule of rules) {
+      if (rule.test(signals)) {
+        addScore(result, rule.points, `${reasonPrefix}${rule.reason}`);
+      }
+    }
+  }
+
+  function getSpamScore(originalText, context = {}) {
     const signals = buildTextSignals(originalText);
 
     const result = {
       score: 0,
       reasons: [],
       normalizedText: signals.text,
+      normalizedProfileText: '',
     };
 
-    if (!signals.text) return result;
+    if (signals.text) {
+      applyScoreRules(result, signals, SCORE_RULES);
+    }
 
-    for (const rule of SCORE_RULES) {
-      if (rule.test(signals)) {
-        addScore(result, rule.points, rule.reason);
+    if (context.authorName) {
+      const profileSignals = buildTextSignals(context.authorName);
+      result.normalizedProfileText = profileSignals.text;
+
+      if (profileSignals.text) {
+        applyScoreRules(result, profileSignals, PROFILE_SCORE_RULES, 'author ');
       }
     }
 
     return result;
   }
 
-  function matchRules(originalText) {
+  function matchRules(originalText, context = {}) {
     const text = normalizeTextForFilter(originalText);
-    if (!text) return null;
+    const profileText = normalizeTextForFilter(context.authorName);
+    if (!text && !profileText) return null;
 
-    const spam = getSpamScore(originalText);
+    const spam = getSpamScore(originalText, context);
 
     if (spam.score >= SPAM_SCORE_THRESHOLD) {
       return {
         name: `spam score ${spam.score}: ${spam.reasons.join(', ')}`,
         normalizedText: spam.normalizedText,
+        normalizedProfileText: spam.normalizedProfileText,
       };
     }
 
@@ -660,9 +732,10 @@
       if (cell.dataset.xStrictReplySpamScoreFiltered === '1') return;
 
       const text = getVisibleTweetText(article);
-      if (!text) return;
+      const authorName = getVisibleUserNameText(article);
+      if (!text && !authorName) return;
 
-      const matchedRule = matchRules(text);
+      const matchedRule = matchRules(text, { authorName });
       if (!matchedRule) return;
 
       hideReply(article, matchedRule);
