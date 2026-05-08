@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X Strict Reply Regex Filter
 // @namespace    local.x.strict.reply.regex.filter
-// @version      1.5.14
+// @version      1.5.15
 // @description  Strictly filter spam/NSFW-style replies on X/Twitter status pages using normalization, regex rules, and a local spam score model.
 // @author       larryisthere
 // @license      MIT
@@ -411,7 +411,7 @@
         element.type = 'button';
         element.style.cssText = [
           'position:fixed',
-          'right:max(16px,calc((100vw - min(600px,100vw)) / 2 + 70px))',
+          'right:70px',
           'bottom:292px',
           'z-index:2147483647',
           'display:flex',

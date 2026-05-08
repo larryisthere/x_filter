@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.15 - 2026-05-09
+
+- Fixed the floating filtered-reply counter alignment so it sits above X's bottom-right action buttons on wide layouts.
+
 ## 1.5.14 - 2026-05-09
 
 - Moved the filtered-reply counter from the status header to a fixed bottom-right floating button above X's action buttons.
