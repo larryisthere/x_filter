@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.12 - 2026-05-09
+
+- Added display-nickname scoring for `同城速配` / `速配` and the `色播` spelling variant.
+- Tightened short digit/emoji-code spam detection so one- or two-digit emoji-only replies such as `8💟💕💖` are hidden without broad emoji blocking.
+- Added regression coverage for the latest local dating and adult livestream bait screenshots.
+
 ## 1.5.11 - 2026-05-08
 
 - Tightened short digit/emoji/Latin-code spam detection so three emoji are enough when the normalized text is a compact digit-plus-Latin code.

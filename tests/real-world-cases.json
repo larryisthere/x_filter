@@ -840,5 +840,34 @@
     "text": "😥🤯6Ju💚",
     "expectedHidden": true,
     "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.12-profile-local-speed-match-single-digit-emoji",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.12",
+    "source": "user screenshot",
+    "authorName": "雪语🌸同城速配🌸",
+    "text": "1❤️‍🔥🥵💅",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.12-profile-color-stream-single-digit-emoji",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.12",
+    "source": "user screenshot",
+    "authorName": "亦婉🌸每晚准时色播🌸",
+    "text": "8💟💕💖",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.12-single-digit-emoji-code-alone",
+    "kind": "derived-regression",
+    "versionIntroduced": "1.5.12",
+    "source": "derived from user policy decision",
+    "text": "8💟💕💖",
+    "expectedHidden": true,
+    "expectedMinScore": 7
   }
 ]

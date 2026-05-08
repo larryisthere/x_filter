@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X Strict Reply Regex Filter
 // @namespace    local.x.strict.reply.regex.filter
-// @version      1.5.11
+// @version      1.5.12
 // @description  Strictly filter spam/NSFW-style replies on X/Twitter status pages using normalization, regex rules, and a local spam score model.
 // @author       larryisthere
 // @license      MIT
@@ -54,8 +54,8 @@
   };
 
   const PROFILE_PATTERNS = {
-    datingBait: /(无偿|免费|骚|sao|涩|涩播|单男|找单男|想找单男|线下|chu男|处男|破处|固炮|合欢宗|母狗|找主人|全国安排)/u,
-    strongDatingBait: /(想找单男|找单男|无偿线下|免费线下|chu男无偿|处男无偿|无偿.*线下|线下.*无偿|免费破处|破处|准时涩播|涩播|固炮|合欢宗|母狗找主人|母狗.*主人|全国安排)/u,
+    datingBait: /(无偿|免费|骚|sao|涩|涩播|色播|单男|找单男|想找单男|线下|chu男|处男|破处|固炮|合欢宗|母狗|找主人|全国安排|同城速配|速配)/u,
+    strongDatingBait: /(想找单男|找单男|无偿线下|免费线下|chu男无偿|处男无偿|无偿.*线下|线下.*无偿|免费破处|破处|准时涩播|准时色播|涩播|色播|固炮|合欢宗|母狗找主人|母狗.*主人|全国安排)/u,
   };
 
   const SCORE_RULES = [
@@ -78,14 +78,14 @@
       points: 7,
       reason: 'short digit emoji code spam',
       test: ({ length, text, emojiCount, latinLetterCount }) =>
-        length >= 2 &&
+        length >= 1 &&
         length <= 8 &&
         /^[a-z0-9]+$/i.test(text) &&
         /\d/.test(text) &&
         !hasHan(text) &&
         emojiCount >= 3 &&
         latinLetterCount <= 4 &&
-        (latinLetterCount >= 1 || /^\d{2}$/.test(text)),
+        (latinLetterCount >= 1 || /^\d{1,2}$/.test(text)),
     },
     {
       points: 1,
