@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.14 - 2026-05-09
+
+- Moved the filtered-reply counter from the status header to a fixed bottom-right floating button above X's action buttons.
+
 ## 1.5.13 - 2026-05-09
 
 - Added a status-page header badge showing how many suspected spam replies were hidden on the current thread.

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X Strict Reply Regex Filter
 // @namespace    local.x.strict.reply.regex.filter
-// @version      1.5.13
+// @version      1.5.14
 // @description  Strictly filter spam/NSFW-style replies on X/Twitter status pages using normalization, regex rules, and a local spam score model.
 // @author       larryisthere
 // @license      MIT
@@ -392,27 +392,6 @@
     updateFilterCounterBadge();
   }
 
-  function findStatusAppBarRightSlot() {
-    const backButton = document.querySelector('[data-testid="app-bar-back"]');
-    if (!backButton) return null;
-
-    let node = backButton.parentElement;
-
-    while (node && node !== document.body) {
-      const children = Array.from(node.children || []);
-      const hasBackButton = node.contains(backButton);
-      const heading = node.querySelector('h2[role="heading"]');
-
-      if (hasBackButton && heading && children.length >= 3) {
-        return children[children.length - 1];
-      }
-
-      node = node.parentElement;
-    }
-
-    return null;
-  }
-
   function updateFilterCounterBadge() {
     const existingBadge = document.querySelector(`[${FILTER_COUNTER_ATTR}]`);
     const count = hiddenReplyKeys.size;
@@ -422,42 +401,47 @@
       return;
     }
 
-    const rightSlot = findStatusAppBarRightSlot();
-    if (!rightSlot) return;
-
     const badge =
       existingBadge ||
       (() => {
-        const element = document.createElement('div');
+        const element = document.createElement('button');
         element.setAttribute(FILTER_COUNTER_ATTR, 'true');
         element.setAttribute('role', 'status');
         element.setAttribute('aria-live', 'polite');
+        element.type = 'button';
         element.style.cssText = [
-          'display:inline-flex',
+          'position:fixed',
+          'right:max(16px,calc((100vw - min(600px,100vw)) / 2 + 70px))',
+          'bottom:292px',
+          'z-index:2147483647',
+          'display:flex',
           'align-items:center',
           'justify-content:center',
-          'min-height:28px',
-          'padding:0 10px',
-          'border-radius:999px',
-          'background:rgba(29,155,240,0.14)',
-          'border:1px solid rgba(29,155,240,0.35)',
-          'color:rgb(29,155,240)',
-          'font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
+          'width:108px',
+          'height:108px',
+          'border-radius:24px',
+          'background:rgb(0,0,0)',
+          'border:1px solid rgba(239,243,244,0.45)',
+          'box-shadow:0 0 0 1px rgba(239,243,244,0.08),0 0 24px rgba(239,243,244,0.32)',
+          'color:rgb(255,255,255)',
+          'font:800 38px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
           'white-space:nowrap',
           'pointer-events:none',
+          'padding:0',
+          'margin:0',
         ].join(';');
         return element;
       })();
 
-    const label = `已过滤 ${count} 条`;
+    const label = String(count);
     if (badge.textContent !== label) {
       badge.textContent = label;
       badge.title = `已隐藏 ${count} 条疑似垃圾回帖`;
       badge.setAttribute('aria-label', badge.title);
     }
 
-    if (badge.parentElement !== rightSlot) {
-      rightSlot.appendChild(badge);
+    if (badge.parentElement !== document.body) {
+      document.body.appendChild(badge);
     }
   }
 
