@@ -83,7 +83,7 @@
         /^[a-z0-9]+$/i.test(text) &&
         /\d/.test(text) &&
         !hasHan(text) &&
-        emojiCount >= 4 &&
+        emojiCount >= 3 &&
         latinLetterCount <= 4 &&
         (latinLetterCount >= 1 || /^\d{2}$/.test(text)),
     },

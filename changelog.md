@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.11 - 2026-05-08
+
+- Tightened short digit/emoji/Latin-code spam detection so three emoji are enough when the normalized text is a compact digit-plus-Latin code.
+- Added regression coverage for the latest short-code reply batch such as `😟🤯0Pe☺️` and `🤫😬4lj🌼`.
+
 ## 1.5.10 - 2026-05-08
 
 - Added stronger display-nickname scoring for adult-service bait such as `免费破处`, `涩播`, `固炮`, `合欢宗`, `母狗找主人`, and `全国安排`.

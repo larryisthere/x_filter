@@ -790,5 +790,55 @@
     "text": "༛ꚡꚢꚣ Lo🌹nel🚀iness is a kind of 👑elegant fre🌞edom ꚤꚥꚦ༜",
     "expectedHidden": true,
     "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.11-short-digit-emoji-code-ope",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.11",
+    "source": "user screenshot",
+    "authorName": "草莓酱酱",
+    "text": "😟🤯0Pe☺️",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.11-short-digit-emoji-code-4lj",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.11",
+    "source": "user screenshot",
+    "authorName": "奶油小猫咪",
+    "text": "🤫😬4lj🌼",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.11-short-digit-emoji-code-9ts",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.11",
+    "source": "user screenshot",
+    "authorName": "软软宝贝",
+    "text": "😭😊9Ts☠️",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.11-short-digit-emoji-code-7cr",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.11",
+    "source": "user screenshot",
+    "authorName": "香草拿铁",
+    "text": "😛🙏7Cr🍜",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.11-short-digit-emoji-code-6ju",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.11",
+    "source": "user screenshot",
+    "authorName": "小甜豆",
+    "text": "😥🤯6Ju💚",
+    "expectedHidden": true,
+    "expectedMinScore": 7
   }
 ]
