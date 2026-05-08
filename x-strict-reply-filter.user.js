@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X Strict Reply Regex Filter
 // @namespace    local.x.strict.reply.regex.filter
-// @version      1.5.12
+// @version      1.5.13
 // @description  Strictly filter spam/NSFW-style replies on X/Twitter status pages using normalization, regex rules, and a local spam score model.
 // @author       larryisthere
 // @license      MIT
@@ -38,6 +38,11 @@
    * false = 直接隐藏
    */
   const SHOW_PLACEHOLDER = false;
+
+  const FILTER_COUNTER_ATTR = 'data-x-strict-reply-filter-counter';
+
+  let activeStatusPath = null;
+  let hiddenReplyKeys = new Set();
 
   const TEXT_PATTERNS = {
     mention: /@[a-z0-9_]{3,20}/i,
@@ -360,6 +365,102 @@
     );
   }
 
+  function getStableHash(text) {
+    let hash = 0;
+    const value = String(text || '');
+
+    for (let index = 0; index < value.length; index += 1) {
+      hash = (hash << 5) - hash + value.charCodeAt(index);
+      hash |= 0;
+    }
+
+    return Math.abs(hash).toString(36);
+  }
+
+  function getReplyCounterKey(article, text, authorName) {
+    const permalinkPath = getTweetPermalinkPath(article);
+    if (permalinkPath) return `path:${permalinkPath}`;
+
+    return `fallback:${getStableHash(`${authorName || ''}\n${text || ''}`)}`;
+  }
+
+  function resetFilterCounterForPath(statusPath) {
+    if (activeStatusPath === statusPath) return;
+
+    activeStatusPath = statusPath;
+    hiddenReplyKeys = new Set();
+    updateFilterCounterBadge();
+  }
+
+  function findStatusAppBarRightSlot() {
+    const backButton = document.querySelector('[data-testid="app-bar-back"]');
+    if (!backButton) return null;
+
+    let node = backButton.parentElement;
+
+    while (node && node !== document.body) {
+      const children = Array.from(node.children || []);
+      const hasBackButton = node.contains(backButton);
+      const heading = node.querySelector('h2[role="heading"]');
+
+      if (hasBackButton && heading && children.length >= 3) {
+        return children[children.length - 1];
+      }
+
+      node = node.parentElement;
+    }
+
+    return null;
+  }
+
+  function updateFilterCounterBadge() {
+    const existingBadge = document.querySelector(`[${FILTER_COUNTER_ATTR}]`);
+    const count = hiddenReplyKeys.size;
+
+    if (!isStatusPage() || count < 1) {
+      existingBadge?.remove();
+      return;
+    }
+
+    const rightSlot = findStatusAppBarRightSlot();
+    if (!rightSlot) return;
+
+    const badge =
+      existingBadge ||
+      (() => {
+        const element = document.createElement('div');
+        element.setAttribute(FILTER_COUNTER_ATTR, 'true');
+        element.setAttribute('role', 'status');
+        element.setAttribute('aria-live', 'polite');
+        element.style.cssText = [
+          'display:inline-flex',
+          'align-items:center',
+          'justify-content:center',
+          'min-height:28px',
+          'padding:0 10px',
+          'border-radius:999px',
+          'background:rgba(29,155,240,0.14)',
+          'border:1px solid rgba(29,155,240,0.35)',
+          'color:rgb(29,155,240)',
+          'font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
+          'white-space:nowrap',
+          'pointer-events:none',
+        ].join(';');
+        return element;
+      })();
+
+    const label = `已过滤 ${count} 条`;
+    if (badge.textContent !== label) {
+      badge.textContent = label;
+      badge.title = `已隐藏 ${count} 条疑似垃圾回帖`;
+      badge.setAttribute('aria-label', badge.title);
+    }
+
+    if (badge.parentElement !== rightSlot) {
+      rightSlot.appendChild(badge);
+    }
+  }
+
   function getTextWithImageAlt(node) {
     if (!node) return '';
 
@@ -643,7 +744,7 @@
     return null;
   }
 
-  function hideReply(article, matchedRule) {
+  function hideReply(article, matchedRule, counterKey) {
     const cell = getTweetCell(article);
 
     if (cell.dataset.xStrictReplySpamScoreFiltered === '1') return;
@@ -655,6 +756,11 @@
     cell.dataset.xStrictReplySpamScoreRule = matchedRule.name;
     cell.dataset.xStrictReplySpamScoreOriginalText = originalText;
     cell.dataset.xStrictReplySpamScoreOriginalHtml = originalHtml;
+    if (counterKey) {
+      cell.dataset.xStrictReplySpamScoreCounterKey = counterKey;
+      hiddenReplyKeys.add(counterKey);
+      updateFilterCounterBadge();
+    }
 
     if (SHOW_PLACEHOLDER) {
       cell.innerHTML = `
@@ -713,10 +819,14 @@
   }
 
   function scan() {
-    if (!isStatusPage()) return;
+    if (!isStatusPage()) {
+      resetFilterCounterForPath(null);
+      return;
+    }
 
     const currentStatusPath = getCurrentStatusPath();
     if (!currentStatusPath) return;
+    resetFilterCounterForPath(currentStatusPath);
 
     const articles = Array.from(
       document.querySelectorAll('article[data-testid="tweet"]')
@@ -750,8 +860,11 @@
       const matchedRule = matchRules(text, { authorName });
       if (!matchedRule) return;
 
-      hideReply(article, matchedRule);
+      const counterKey = getReplyCounterKey(article, text, authorName);
+      hideReply(article, matchedRule, counterKey);
     });
+
+    updateFilterCounterBadge();
   }
 
   document.addEventListener('click', async function (event) {
@@ -769,9 +882,14 @@
 
     if (action === 'restore') {
       const html = cell.dataset.xStrictReplySpamScoreOriginalHtml;
+      const counterKey = cell.dataset.xStrictReplySpamScoreCounterKey;
       if (html) {
         cell.innerHTML = html;
         cell.dataset.xStrictReplySpamScoreFiltered = '0';
+        if (counterKey) {
+          hiddenReplyKeys.delete(counterKey);
+          updateFilterCounterBadge();
+        }
       }
       return;
     }

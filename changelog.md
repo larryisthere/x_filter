@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.13 - 2026-05-09
+
+- Added a status-page header badge showing how many suspected spam replies were hidden on the current thread.
+
 ## 1.5.12 - 2026-05-09
 
 - Added display-nickname scoring for `同城速配` / `速配` and the `色播` spelling variant.
