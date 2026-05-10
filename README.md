@@ -36,6 +36,17 @@ userscript 版和 Chrome extension 版建议二选一安装。如果同时安装
 
 在帖子详情页隐藏到垃圾回复后，右下角会显示本帖当前已过滤数量。
 
+如需生成 Chrome Web Store 上传包，请在本地运行：
+
+```sh
+node scripts/build-distributions.js
+mkdir -p dist
+cd extension
+zip -r ../dist/x-strict-reply-filter-chrome-1.6.0.zip manifest.json dist icons
+```
+
+生成的 zip 是发布产物，不提交到源码仓库。
+
 ## 默认策略
 
 - 不过滤主帖。
@@ -104,6 +115,17 @@ Install either the userscript version or the Chrome extension version. If both a
 By default, the filter only scans replies below the main post. It does not filter the main post itself.
 
 After spam replies are hidden on a post detail page, a floating counter in the bottom-right corner shows how many replies were filtered on the current thread.
+
+To generate the Chrome Web Store upload package locally, run:
+
+```sh
+node scripts/build-distributions.js
+mkdir -p dist
+cd extension
+zip -r ../dist/x-strict-reply-filter-chrome-1.6.0.zip manifest.json dist icons
+```
+
+The generated zip is a release artifact and is not committed to the source repository.
 
 ## Default Policy
 
