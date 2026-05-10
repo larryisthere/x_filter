@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.16 - 2026-05-09
+
+- Reworked the floating filtered-reply counter to measure X's bottom-right action buttons and match their size and column position.
+
 ## 1.5.15 - 2026-05-09
 
 - Fixed the floating filtered-reply counter alignment so it sits above X's bottom-right action buttons on wide layouts.

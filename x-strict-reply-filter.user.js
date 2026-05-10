@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X Strict Reply Regex Filter
 // @namespace    local.x.strict.reply.regex.filter
-// @version      1.5.15
+// @version      1.5.16
 // @description  Strictly filter spam/NSFW-style replies on X/Twitter status pages using normalization, regex rules, and a local spam score model.
 // @author       larryisthere
 // @license      MIT
@@ -40,6 +40,8 @@
   const SHOW_PLACEHOLDER = false;
 
   const FILTER_COUNTER_ATTR = 'data-x-strict-reply-filter-counter';
+  const FLOATING_COUNTER_FALLBACK_SIZE = 54;
+  const FLOATING_COUNTER_GAP = 14;
 
   let activeStatusPath = null;
   let hiddenReplyKeys = new Set();
@@ -411,20 +413,13 @@
         element.type = 'button';
         element.style.cssText = [
           'position:fixed',
-          'right:70px',
-          'bottom:292px',
           'z-index:2147483647',
           'display:flex',
           'align-items:center',
           'justify-content:center',
-          'width:108px',
-          'height:108px',
-          'border-radius:24px',
           'background:rgb(0,0,0)',
           'border:1px solid rgba(239,243,244,0.45)',
-          'box-shadow:0 0 0 1px rgba(239,243,244,0.08),0 0 24px rgba(239,243,244,0.32)',
           'color:rgb(255,255,255)',
-          'font:800 38px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
           'white-space:nowrap',
           'pointer-events:none',
           'padding:0',
@@ -443,6 +438,88 @@
     if (badge.parentElement !== document.body) {
       document.body.appendChild(badge);
     }
+
+    positionFilterCounterBadge(badge);
+  }
+
+  function hasFixedOrStickyContext(element) {
+    let node = element;
+
+    while (node && node !== document.body && node !== document.documentElement) {
+      const position = window.getComputedStyle(node).position;
+      if (position === 'fixed' || position === 'sticky') return true;
+      node = node.parentElement;
+    }
+
+    return false;
+  }
+
+  function getBottomRightFloatingActionRect(badge) {
+    const viewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+    const candidates = Array.from(
+      document.querySelectorAll('button,[role="button"],a[role="button"]')
+    )
+      .filter((element) => element !== badge && !element.closest(`[${FILTER_COUNTER_ATTR}]`))
+      .map((element) => {
+        const rect = element.getBoundingClientRect();
+        return { element, rect };
+      })
+      .filter(({ element, rect }) => {
+        const style = window.getComputedStyle(element);
+        return (
+          rect.width >= 40 &&
+          rect.width <= 90 &&
+          rect.height >= 40 &&
+          rect.height <= 90 &&
+          rect.right > viewportWidth * 0.55 &&
+          rect.bottom > viewportHeight * 0.45 &&
+          rect.left >= 0 &&
+          rect.top >= 0 &&
+          style.display !== 'none' &&
+          style.visibility !== 'hidden' &&
+          Number(style.opacity || '1') > 0 &&
+          hasFixedOrStickyContext(element)
+        );
+      });
+
+    if (!candidates.length) return null;
+
+    const maxRight = Math.max(...candidates.map(({ rect }) => rect.right));
+    const rightColumn = candidates.filter(({ rect }) => Math.abs(rect.right - maxRight) <= 8);
+    rightColumn.sort((a, b) => a.rect.top - b.rect.top);
+
+    return rightColumn[0].rect;
+  }
+
+  function positionFilterCounterBadge(badge) {
+    const anchorRect = getBottomRightFloatingActionRect(badge);
+    const fallbackRight = 70;
+    const fallbackBottom = 154;
+    const size = anchorRect
+      ? Math.round(Math.min(anchorRect.width, anchorRect.height))
+      : FLOATING_COUNTER_FALLBACK_SIZE;
+
+    const left = anchorRect
+      ? Math.round(anchorRect.right - size)
+      : Math.round((window.innerWidth || document.documentElement.clientWidth || 0) - fallbackRight - size);
+    const top = anchorRect
+      ? Math.round(anchorRect.top - FLOATING_COUNTER_GAP - size)
+      : Math.round((window.innerHeight || document.documentElement.clientHeight || 0) - fallbackBottom - size);
+
+    badge.style.left = `${Math.max(8, left)}px`;
+    badge.style.top = `${Math.max(8, top)}px`;
+    badge.style.right = 'auto';
+    badge.style.bottom = 'auto';
+    badge.style.width = `${size}px`;
+    badge.style.height = `${size}px`;
+    badge.style.borderRadius = `${Math.round(size * 0.3)}px`;
+    badge.style.boxShadow = `0 0 0 1px rgba(239,243,244,0.08),0 0 ${Math.round(
+      size * 0.45
+    )}px rgba(239,243,244,0.32)`;
+    badge.style.font = `800 ${Math.round(
+      size * 0.45
+    )}px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif`;
   }
 
   function getTextWithImageAlt(node) {
@@ -928,6 +1005,7 @@
     });
 
     window.addEventListener('scroll', () => scheduleScan(100), { passive: true });
+    window.addEventListener('resize', () => updateFilterCounterBadge());
     window.addEventListener('popstate', () => scheduleScan(300));
     window.addEventListener('focus', () => scheduleScan(300));
 
