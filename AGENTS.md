@@ -12,7 +12,7 @@ The filter should favor high-confidence pattern combinations over broad keyword 
 - `tests/real-world-cases.json`: real spam samples and policy boundary cases.
 - `tests/run-real-world-cases.js`: regression test runner for accumulated real-world cases.
 - `CHANGELOG.md`: update notes for every behavior change.
-- `readme.md`: user-facing install and usage documentation.
+- `README.md`: user-facing install and usage documentation.
 
 ## Development Rules
 

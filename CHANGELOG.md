@@ -97,7 +97,7 @@
 - Added scoring for Unicode replacement markers combined with Latin-dominant reply text.
 - Kept the new English-template detection as a high-confidence combo rule to reduce false positives on normal English replies.
 - Renamed the main userscript file to `x-strict-reply-filter.user.js`.
-- Added project `readme.md` and `CHANGELOG.md`.
+- Added project `README.md` and `CHANGELOG.md`.
 
 ## 1.4.2
 
