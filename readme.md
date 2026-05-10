@@ -1,5 +1,9 @@
 # X Strict Reply Filter
 
+简体中文 | [English](#english)
+
+## 简体中文
+
 一个用于 X / Twitter 状态页的本地 userscript。它会在帖子详情页扫描主帖下方回复，并根据归一化文本和本地垃圾分数模型隐藏疑似垃圾回复。
 
 ## 适用场景
@@ -49,3 +53,57 @@ node tests/run-real-world-cases.js
 ## 隐私
 
 脚本完全在浏览器本地运行，不上传、不发送、不保存任何回复内容。开启 `SHOW_PLACEHOLDER` 后，页面内会临时保留原始 HTML 以支持恢复显示；刷新页面后这些临时数据会消失。
+
+## English
+
+[简体中文](#简体中文) | English
+
+A local userscript for X / Twitter status pages. It scans replies below the main post and hides likely spam replies using normalized text and a local spam score model.
+
+## Use Cases
+
+- NSFW / hookup / local-service bait replies
+- Chinese template replies with random letter or digit tails
+- Batch English short-joke replies obfuscated with emoji or replacement characters
+- Low-value replies with promotion or traffic-funneling signals
+
+## Installation
+
+1. Install Tampermonkey, Violentmonkey, or another userscript manager.
+2. Recommended: install directly from Greasy Fork: <https://greasyfork.org/en/scripts/576877-x-strict-reply-filter>.
+3. Alternatively, create a new script and paste the full contents of `x-strict-reply-filter.user.js`.
+4. Save it, then open a post detail page under `https://x.com/*` or `https://twitter.com/*`.
+
+By default, the script only filters replies below the main post. It does not filter the main post itself.
+
+After spam replies are hidden on a post detail page, a floating counter in the bottom-right corner shows how many replies were filtered on the current thread.
+
+## Core Config
+
+- `FILTER_MAIN_TWEET`: Whether to filter the main post.
+- `SPAM_SCORE_THRESHOLD`: Spam score threshold. Defaults to `7`.
+- `SHOW_PLACEHOLDER`: Whether to show a "hidden" placeholder card.
+
+## Filtering Strategy
+
+The script first reads visible reply text, then:
+
+1. Applies Unicode NFKC normalization and removes control characters, zero-width characters, direction-control characters, and variation selectors.
+2. Normalizes common obfuscation, including `曰`, `艹`, traditional Chinese variants, and mixed pinyin spellings.
+3. Calculates a local spam score and hides the reply when it reaches the threshold.
+
+For the screenshot-style spam batches, `1.5.0` added high-confidence scoring for "English short-joke templates + emoji / replacement-character obfuscation". It requires a combination of template text, emoji flooding, replacement characters, or related structural signals, so ordinary English replies with emoji are not blocked by meaning alone.
+
+## Regression Tests
+
+Real missed-spam samples are maintained in `tests/real-world-cases.json`. Whenever rules are adjusted based on real content, append the sample under the version where it was found, then run:
+
+```sh
+node tests/run-real-world-cases.js
+```
+
+The test cases cover both spam samples that should be hidden and policy boundary samples that should not be hidden.
+
+## Privacy
+
+The script runs entirely in your browser. It does not upload, send, or store reply content. When `SHOW_PLACEHOLDER` is enabled, the page temporarily keeps the original HTML so hidden replies can be restored; this temporary data disappears after the page is refreshed.

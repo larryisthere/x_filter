@@ -11,7 +11,7 @@ The filter should favor high-confidence pattern combinations over broad keyword 
 - `x-strict-reply-filter.user.js`: userscript implementation, text extraction, normalization, scoring signals, and filtering behavior.
 - `tests/real-world-cases.json`: real spam samples and policy boundary cases.
 - `tests/run-real-world-cases.js`: regression test runner for accumulated real-world cases.
-- `changelog.md`: update notes for every behavior change.
+- `CHANGELOG.md`: update notes for every behavior change.
 - `readme.md`: user-facing install and usage documentation.
 
 ## Development Rules
@@ -36,7 +36,7 @@ The expected result is that all real-world cases pass. If tightening a rule caus
 
 ## Changelog
 
-For every behavior change, add an entry to `changelog.md` with the next version section.
+For every behavior change, add an entry to `CHANGELOG.md` with the next version section.
 
 Doc-only changes do not need a version entry unless they describe a behavior change or release note.
 
