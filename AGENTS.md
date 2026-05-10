@@ -2,13 +2,19 @@
 
 ## Project Purpose
 
-This repo contains a local X/Twitter userscript for hiding spam/NSFW-style replies on status pages. The core file is `x-strict-reply-filter.user.js`.
+This repo contains a local X/Twitter reply filter for hiding spam/NSFW-style replies on status pages. It ships as both a userscript and a Chrome extension. The shared rule core lives under `src/`.
 
 The filter should favor high-confidence pattern combinations over broad keyword blocking. Prefer reusable structural signals over account IDs, exact rotating handles, or one-off strings.
 
 ## Key Files
 
-- `x-strict-reply-filter.user.js`: userscript implementation, text extraction, normalization, scoring signals, and filtering behavior.
+- `src/filter-core.js`: shared normalization, scoring signals, and spam score model.
+- `src/dom-extract.js`: shared X DOM text extraction, including emoji image `alt` adjacency.
+- `src/x-page-filter.js`: shared X page scanning, hiding, counter, and double-runtime guard.
+- `userscript/x-strict-reply-filter.user.js`: generated userscript distribution file.
+- `extension/manifest.json`: Chrome extension manifest.
+- `extension/dist/content.js`: generated Chrome extension content script.
+- `scripts/build-distributions.js`: builds generated userscript and extension content files from `src/`.
 - `tests/real-world-cases.json`: real spam samples and policy boundary cases.
 - `tests/run-real-world-cases.js`: regression test runner for accumulated real-world cases.
 - `CHANGELOG.md`: update notes for every behavior change.
@@ -22,6 +28,8 @@ The filter should favor high-confidence pattern combinations over broad keyword 
 - Keep rules based on reusable features, not account IDs or fixed rotating handles.
 - Do not treat normal English phrase meaning as spam by itself. Use structural signals such as emoji-broken words, compact short codes, non-Latin decoration, NSFW profile bait, or template combinations.
 - Preserve X emoji image `alt` adjacency when it affects text patterns such as `Lo🌹nel`.
+- Keep userscript and Chrome extension behavior aligned by changing shared `src/` files first, then rebuilding distributions.
+- Do not add popup/options/side-panel UI until the open question is resolved.
 - Keep changes narrow. Avoid unrelated refactors when adjusting a detection rule.
 
 ## Testing
@@ -29,6 +37,7 @@ The filter should favor high-confidence pattern combinations over broad keyword 
 Run before finishing any rule change:
 
 ```sh
+node scripts/build-distributions.js
 node tests/run-real-world-cases.js
 ```
 

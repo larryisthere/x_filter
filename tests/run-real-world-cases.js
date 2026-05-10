@@ -3,12 +3,15 @@ const path = require('path');
 const vm = require('vm');
 
 const repoRoot = path.resolve(__dirname, '..');
-const scriptPath = path.join(repoRoot, 'x-strict-reply-filter.user.js');
+const sourcePaths = [
+  path.join(repoRoot, 'src/filter-core.js'),
+  path.join(repoRoot, 'src/dom-extract.js'),
+];
 const casesPath = path.join(__dirname, 'real-world-cases.json');
 
-const source = fs
-  .readFileSync(scriptPath, 'utf8')
-  .replace(/\}\)\(\);\s*$/, 'globalThis.__xFilterTest = { getSpamScore, getTextWithImageAlt, matchRules };\n})();');
+const source = sourcePaths
+  .map((sourcePath) => fs.readFileSync(sourcePath, 'utf8'))
+  .join('\n');
 
 const sandbox = {
   console,
@@ -31,7 +34,10 @@ const sandbox = {
 };
 
 vm.createContext(sandbox);
-vm.runInContext(source, sandbox, { filename: scriptPath });
+vm.runInContext(source, sandbox, { filename: 'x-strict-reply-filter-src.js' });
+
+const core = sandbox.XStrictReplyFilterCore;
+const dom = sandbox.XStrictReplyFilterDom;
 
 const cases = JSON.parse(fs.readFileSync(casesPath, 'utf8'));
 let failures = 0;
@@ -56,8 +62,8 @@ for (const testCase of cases) {
   const context = {
     authorName: testCase.authorName || '',
   };
-  const matched = sandbox.__xFilterTest.matchRules(testCase.text, context);
-  const score = sandbox.__xFilterTest.getSpamScore(testCase.text, context);
+  const matched = core.matchRules(testCase.text, context);
+  const score = core.getSpamScore(testCase.text, context);
   const hidden = Boolean(matched);
   const errors = [];
 
@@ -89,7 +95,7 @@ for (const testCase of cases) {
   }
 }
 
-const extractedBrokenWord = sandbox.__xFilterTest.getTextWithImageAlt(
+const extractedBrokenWord = dom.getTextWithImageAlt(
   elementNode('SPAN', [
     textNode('Lo'),
     elementNode('IMG', [], '🌹'),

@@ -4,7 +4,7 @@
 
 ## 简体中文
 
-一个用于 X / Twitter 状态页的本地 userscript。它会在帖子详情页扫描主帖下方回复，并根据归一化文本和本地垃圾分数模型隐藏疑似垃圾回复。
+一个用于 X / Twitter 状态页的本地过滤器，提供 userscript 和 Chrome extension 两种本地安装形态。它会在帖子详情页扫描主帖下方回复，并根据归一化文本和本地垃圾分数模型隐藏疑似垃圾回复。
 
 ## 适用场景
 
@@ -13,22 +13,34 @@
 - 大量 emoji 或替换符混淆的英文短笑话批量回复
 - 回复内容中带有引流特征的垃圾回复
 
-## 安装
+## 安装 userscript 版
 
 1. 安装 Tampermonkey、Violentmonkey 或同类 userscript 管理器。
 2. 推荐直接从 Greasy Fork 安装：<https://greasyfork.org/en/scripts/576877-x-strict-reply-filter>。
-3. 也可以新建脚本并粘贴 `x-strict-reply-filter.user.js` 的全部内容。
+3. 也可以新建脚本并粘贴 `userscript/x-strict-reply-filter.user.js` 的全部内容。
 4. 保存后打开 `https://x.com/*` 或 `https://twitter.com/*` 的帖子详情页。
 
-脚本默认只过滤主帖下方的回复，不过滤主帖本身。
+## 安装 Chrome extension 版
+
+1. 打开 Chrome 的 `chrome://extensions`。
+2. 开启开发者模式。
+3. 选择“加载已解压的扩展程序”。
+4. 选择本仓库的 `extension` 目录。
+5. 打开 `https://x.com/*` 或 `https://twitter.com/*` 的帖子详情页。
+
+第一版 Chrome extension 不提供 popup、options 或 side panel UI；安装后会按默认策略自动生效。
+
+userscript 版和 Chrome extension 版建议二选一安装。如果同时安装，先启动的运行时会在页面上写入运行标记，后启动的一方会跳过，避免重复隐藏同一批回复。
+
+默认只过滤主帖下方的回复，不过滤主帖本身。
 
 在帖子详情页隐藏到垃圾回复后，右下角会显示本帖当前已过滤数量。
 
-## 核心配置
+## 默认策略
 
-- `FILTER_MAIN_TWEET`: 是否过滤主帖。
-- `SPAM_SCORE_THRESHOLD`: 垃圾分数阈值，默认 `7`。
-- `SHOW_PLACEHOLDER`: 是否显示“已隐藏”占位卡片。
+- 不过滤主帖。
+- 垃圾分数阈值为 `7`。
+- 不显示“已隐藏”占位卡片，直接隐藏命中的回复。
 
 ## 过滤策略
 
@@ -47,20 +59,21 @@
 真实漏网样本维护在 `tests/real-world-cases.json`。每次根据真实内容调整规则时，把样本按发现版本追加进去，然后运行：
 
 ```sh
+node scripts/build-distributions.js
 node tests/run-real-world-cases.js
 ```
 
-测试用例同时支持应隐藏的垃圾样本和不应隐藏的策略边界样本。
+测试用例直接验证 `src` 下的共用规则内核和 X DOM 文本提取逻辑。发布文件由 `scripts/build-distributions.js` 生成到 `userscript/` 和 `extension/dist/`。
 
 ## 隐私
 
-脚本完全在浏览器本地运行，不上传、不发送、不保存任何回复内容。开启 `SHOW_PLACEHOLDER` 后，页面内会临时保留原始 HTML 以支持恢复显示；刷新页面后这些临时数据会消失。
+过滤器完全在浏览器本地运行，不上传、不发送、不保存任何回复内容。当前默认隐藏模式不会显示占位卡片；如果源码中开启占位卡片，页面内会临时保留原始 HTML 以支持恢复显示，刷新页面后这些临时数据会消失。
 
 ## English
 
 [简体中文](#简体中文) | English
 
-A local userscript for X / Twitter status pages. It scans replies below the main post and hides likely spam replies using normalized text and a local spam score model.
+A local filter for X / Twitter status pages, available as both a userscript and a Chrome extension. It scans replies below the main post and hides likely spam replies using normalized text and a local spam score model.
 
 ## Use Cases
 
@@ -69,22 +82,34 @@ A local userscript for X / Twitter status pages. It scans replies below the main
 - Batch English short-joke replies obfuscated with emoji or replacement characters
 - Low-value replies with promotion or traffic-funneling signals
 
-## Installation
+## Userscript Installation
 
 1. Install Tampermonkey, Violentmonkey, or another userscript manager.
 2. Recommended: install directly from Greasy Fork: <https://greasyfork.org/en/scripts/576877-x-strict-reply-filter>.
-3. Alternatively, create a new script and paste the full contents of `x-strict-reply-filter.user.js`.
+3. Alternatively, create a new script and paste the full contents of `userscript/x-strict-reply-filter.user.js`.
 4. Save it, then open a post detail page under `https://x.com/*` or `https://twitter.com/*`.
 
-By default, the script only filters replies below the main post. It does not filter the main post itself.
+## Chrome Extension Installation
+
+1. Open `chrome://extensions`.
+2. Enable Developer mode.
+3. Choose "Load unpacked".
+4. Select this repository's `extension` directory.
+5. Open a post detail page under `https://x.com/*` or `https://twitter.com/*`.
+
+The first Chrome extension release does not expose a popup, options page, or side panel UI; it runs automatically with the default policy after installation.
+
+Install either the userscript version or the Chrome extension version. If both are installed, the runtime that starts first marks the page, and the second runtime skips startup to avoid hiding the same replies twice.
+
+By default, the filter only scans replies below the main post. It does not filter the main post itself.
 
 After spam replies are hidden on a post detail page, a floating counter in the bottom-right corner shows how many replies were filtered on the current thread.
 
-## Core Config
+## Default Policy
 
-- `FILTER_MAIN_TWEET`: Whether to filter the main post.
-- `SPAM_SCORE_THRESHOLD`: Spam score threshold. Defaults to `7`.
-- `SHOW_PLACEHOLDER`: Whether to show a "hidden" placeholder card.
+- Do not filter the main post.
+- Use spam score threshold `7`.
+- Hide matched replies directly without showing placeholder cards.
 
 ## Filtering Strategy
 
@@ -103,11 +128,12 @@ For the screenshot-style spam batches, `1.5.0` added high-confidence scoring for
 Real missed-spam samples are maintained in `tests/real-world-cases.json`. Whenever rules are adjusted based on real content, append the sample under the version where it was found, then run:
 
 ```sh
+node scripts/build-distributions.js
 node tests/run-real-world-cases.js
 ```
 
-The test cases cover both spam samples that should be hidden and policy boundary samples that should not be hidden.
+The test runner validates the shared rule core and X DOM text extraction helpers under `src`. Distribution files are generated into `userscript/` and `extension/dist/` by `scripts/build-distributions.js`.
 
 ## Privacy
 
-The script runs entirely in your browser. It does not upload, send, or store reply content. When `SHOW_PLACEHOLDER` is enabled, the page temporarily keeps the original HTML so hidden replies can be restored; this temporary data disappears after the page is refreshed.
+The filter runs entirely in your browser. It does not upload, send, or store reply content. The current default mode hides replies directly without placeholder cards; if placeholder mode is enabled in source, the page temporarily keeps the original HTML so hidden replies can be restored, and that temporary data disappears after refresh.

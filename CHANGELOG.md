@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.6.0 - 2026-05-10
+
+- Added a first Chrome extension distribution that runs automatically on X/Twitter status pages without popup, options, or side-panel UI.
+- Split shared filter code into `src/filter-core.js`, `src/dom-extract.js`, and `src/x-page-filter.js`, then generate the userscript and extension content script from the same source files.
+- Added a page-level runtime guard so the userscript and Chrome extension versions do not both filter the same page when installed together.
+- Updated documentation for the new project layout, Chrome extension installation, generated distribution files, and the open question around future extension UI.
+
 ## 1.5.19 - 2026-05-10
 
 - Added regression coverage for display-name drug bait using `💊` as `药`, such as `迷💊` and `春💊`.
