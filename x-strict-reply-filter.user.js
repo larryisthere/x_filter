@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X Strict Reply Filter
 // @namespace    local.x.strict.reply.filter
-// @version      1.5.17
+// @version      1.5.18
 // @description  Strictly filter spam/NSFW-style replies on X/Twitter status pages using normalization, structural signals, and a local spam score model.
 // @author       larryisthere
 // @license      MIT
@@ -63,6 +63,7 @@
   const PROFILE_PATTERNS = {
     datingBait: /(无偿|免费|骚|sao|涩|涩播|色播|单男|找单男|想找单男|线下|chu男|处男|破处|固炮|合欢宗|母狗|找主人|全国安排|同城速配|速配)/u,
     strongDatingBait: /(想找单男|找单男|无偿线下|免费线下|chu男无偿|处男无偿|无偿.*线下|线下.*无偿|免费破处|破处|准时涩播|准时色播|涩播|色播|固炮|合欢宗|母狗找主人|母狗.*主人|全国安排)/u,
+    localResourceCta: /(主页|点我主页|看我主页|置顶|看我置顶|点我置顶|进群|同城|附近|附近牵线|牵线|约见|资源入口|真实资源|真实对接|真实可靠对接|全国1-5线|1-5线)/u,
   };
 
   const SCORE_RULES = [
@@ -93,6 +94,14 @@
         emojiCount >= 3 &&
         latinLetterCount <= 4 &&
         (latinLetterCount >= 1 || /^\d{1,2}$/.test(text)),
+    },
+    {
+      points: 7,
+      reason: 'emoji-only short reply',
+      test: ({ length, emojiCount, rawCharCount }) =>
+        length === 0 &&
+        emojiCount >= 3 &&
+        rawCharCount <= 12,
     },
     {
       points: 1,
@@ -306,6 +315,12 @@
   ];
 
   const PROFILE_SCORE_RULES = [
+    {
+      points: 7,
+      reason: 'profile local resource cta bait',
+      test: ({ length, text }) =>
+        length <= 80 && PROFILE_PATTERNS.localResourceCta.test(text),
+    },
     {
       points: 7,
       reason: 'profile strong dating bait phrase',
@@ -771,7 +786,7 @@
       normalizedProfileText: '',
     };
 
-    if (signals.text) {
+    if (signals.text || signals.emojiCount > 0) {
       applyScoreRules(result, signals, SCORE_RULES);
     }
 
@@ -790,9 +805,8 @@
   function matchRules(originalText, context = {}) {
     const text = normalizeTextForFilter(originalText);
     const profileText = normalizeTextForFilter(context.authorName);
-    if (!text && !profileText) return null;
-
     const spam = getSpamScore(originalText, context);
+    if (!text && !profileText && spam.score < SPAM_SCORE_THRESHOLD) return null;
 
     if (spam.score >= SPAM_SCORE_THRESHOLD) {
       return {

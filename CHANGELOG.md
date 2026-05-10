@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.18 - 2026-05-10
+
+- Added regression coverage for local dating / resource-entry display-name spam with emoji-only replies.
+- Treated short emoji-only replies and display-name CTA bait such as `主页`, `同城`, `约见`, `牵线`, and `附近` as high-confidence spam signals.
+
 ## 1.5.17 - 2026-05-10
 
 - Renamed the script to `X Strict Reply Filter` and updated the install metadata to better reflect the current signal-scoring approach instead of a regex-only filter.

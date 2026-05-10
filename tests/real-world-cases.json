@@ -869,5 +869,35 @@
     "text": "8💟💕💖",
     "expectedHidden": true,
     "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.18-profile-nearby-match-group",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.18",
+    "source": "user screenshot",
+    "authorName": "✨附近牵线🖤真实可靠对接❗主页进群",
+    "text": "💔🔥☔",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.18-profile-city-meet-resource-pinned",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.18",
+    "source": "user screenshot",
+    "authorName": "✨同城约见🥺真实资源入口🌪️看我置顶",
+    "text": "💦💝🔥",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.18-profile-national-lines-meet-homepage",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.18",
+    "source": "user screenshot",
+    "authorName": "🌍全国1-5线💜真实约见入口🌊点我主页",
+    "text": "☺️🌸☘️💕",
+    "expectedHidden": true,
+    "expectedMinScore": 7
   }
 ]
