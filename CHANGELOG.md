@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.19 - 2026-05-10
+
+- Added regression coverage for display-name drug bait using `💊` as `药`, such as `迷💊` and `春💊`.
+- Treated display-name `催情`, `迷药`, and `春药` bait as high-confidence spam signals while keeping standalone `听话` conservative.
+
 ## 1.5.18 - 2026-05-10
 
 - Added regression coverage for local dating / resource-entry display-name spam with emoji-only replies.

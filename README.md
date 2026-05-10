@@ -38,6 +38,8 @@
 2. 归一常见绕词，例如 `曰`、`艹`、繁体和拼音混写。
 3. 计算本地垃圾分数，达到阈值后隐藏。
 
+过滤采用统一的权重打分阈值模式：弱信号需要组合叠加，高置信信号可以单条达到默认阈值 `7`，但仍走同一套分数与调试原因输出。
+
 针对截图中的批量回复，`1.5.0` 新增了对“英文短笑话模板 + emoji / 替换符混淆”的高置信评分。它需要同时满足英文模板、emoji 泛滥或替换符等组合特征，避免单纯把普通英文回复误判为垃圾。
 
 ## 回归测试
@@ -91,6 +93,8 @@ The script first reads visible reply text, then:
 1. Applies Unicode NFKC normalization and removes control characters, zero-width characters, direction-control characters, and variation selectors.
 2. Normalizes common obfuscation, including `曰`, `艹`, traditional Chinese variants, and mixed pinyin spellings.
 3. Calculates a local spam score and hides the reply when it reaches the threshold.
+
+Filtering uses a single weighted score threshold: weak signals must combine, while high-confidence signals can reach the default threshold `7` on their own. All decisions still use the same score and debug-reason output.
 
 For the screenshot-style spam batches, `1.5.0` added high-confidence scoring for "English short-joke templates + emoji / replacement-character obfuscation". It requires a combination of template text, emoji flooding, replacement characters, or related structural signals, so ordinary English replies with emoji are not blocked by meaning alone.
 

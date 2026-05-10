@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X Strict Reply Filter
 // @namespace    local.x.strict.reply.filter
-// @version      1.5.18
+// @version      1.5.19
 // @description  Strictly filter spam/NSFW-style replies on X/Twitter status pages using normalization, structural signals, and a local spam score model.
 // @author       larryisthere
 // @license      MIT
@@ -64,6 +64,7 @@
     datingBait: /(无偿|免费|骚|sao|涩|涩播|色播|单男|找单男|想找单男|线下|chu男|处男|破处|固炮|合欢宗|母狗|找主人|全国安排|同城速配|速配)/u,
     strongDatingBait: /(想找单男|找单男|无偿线下|免费线下|chu男无偿|处男无偿|无偿.*线下|线下.*无偿|免费破处|破处|准时涩播|准时色播|涩播|色播|固炮|合欢宗|母狗找主人|母狗.*主人|全国安排)/u,
     localResourceCta: /(主页|点我主页|看我主页|置顶|看我置顶|点我置顶|进群|同城|附近|附近牵线|牵线|约见|资源入口|真实资源|真实对接|真实可靠对接|全国1-5线|1-5线)/u,
+    drugBait: /(催情|迷药|春药)/u,
   };
 
   const SCORE_RULES = [
@@ -315,6 +316,11 @@
   ];
 
   const PROFILE_SCORE_RULES = [
+    {
+      points: 7,
+      reason: 'profile drug bait phrase',
+      test: ({ length, text }) => length <= 80 && PROFILE_PATTERNS.drugBait.test(text),
+    },
     {
       points: 7,
       reason: 'profile local resource cta bait',
@@ -618,6 +624,7 @@
 
       // emoji / 符号转义
       .replace(/[✈🛩]/gu, '飞机')
+      .replace(/💊/gu, '药')
 
       // 只保留中文、英文、数字、@
       .replace(/[^\p{Script=Han}a-zA-Z0-9@]/gu, '')

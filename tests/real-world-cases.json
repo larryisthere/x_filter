@@ -899,5 +899,15 @@
     "text": "☺️🌸☘️💕",
     "expectedHidden": true,
     "expectedMinScore": 7
+  },
+  {
+    "id": "v1.5.19-profile-drug-bait-short-emoji-code",
+    "kind": "real-spam",
+    "versionIntroduced": "1.5.19",
+    "source": "user screenshot",
+    "authorName": "👉👉催情💊春💊迷💊听话💦🎉",
+    "text": "6🏀🎉",
+    "expectedHidden": true,
+    "expectedMinScore": 7
   }
 ]
