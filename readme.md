@@ -12,8 +12,9 @@
 ## 安装
 
 1. 安装 Tampermonkey、Violentmonkey 或同类 userscript 管理器。
-2. 新建脚本并粘贴 `x-strict-reply-filter.user.js` 的全部内容。
-3. 保存后打开 `https://x.com/*` 或 `https://twitter.com/*` 的帖子详情页。
+2. 推荐直接从 Greasy Fork 安装：<https://greasyfork.org/en/scripts/576877-x-strict-reply-regex-filter>。
+3. 也可以新建脚本并粘贴 `x-strict-reply-filter.user.js` 的全部内容。
+4. 保存后打开 `https://x.com/*` 或 `https://twitter.com/*` 的帖子详情页。
 
 脚本默认只过滤主帖下方的回复，不过滤主帖本身。
 
