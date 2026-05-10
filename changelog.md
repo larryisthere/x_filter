@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.17 - 2026-05-10
+
+- Renamed the script to `X Strict Reply Filter` and updated the install metadata to better reflect the current signal-scoring approach instead of a regex-only filter.
+
 ## 1.5.16 - 2026-05-09
 
 - Reworked the floating filtered-reply counter to measure X's bottom-right action buttons and match their size and column position.

@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         X Strict Reply Regex Filter
-// @namespace    local.x.strict.reply.regex.filter
-// @version      1.5.16
-// @description  Strictly filter spam/NSFW-style replies on X/Twitter status pages using normalization, regex rules, and a local spam score model.
+// @name         X Strict Reply Filter
+// @namespace    local.x.strict.reply.filter
+// @version      1.5.17
+// @description  Strictly filter spam/NSFW-style replies on X/Twitter status pages using normalization, structural signals, and a local spam score model.
 // @author       larryisthere
 // @license      MIT
 // @match        https://x.com/*
@@ -864,7 +864,7 @@
     }
 
     if (DEBUG) {
-      console.log('[X Strict Reply Spam Score Filter] hidden:', matchedRule.name);
+      console.log('[X Strict Reply Filter] hidden:', matchedRule.name);
       console.log('[original]', originalText);
       console.log('[normalized]', matchedRule.normalizedText);
     }
@@ -1014,7 +1014,7 @@
     scheduleScan(2500);
 
     if (DEBUG) {
-      console.log('[X Strict Reply Spam Score Filter] loaded:', location.href);
+      console.log('[X Strict Reply Filter] loaded:', location.href);
     }
   }
 

@@ -1,4 +1,4 @@
-# X Strict Reply Regex Filter
+# X Strict Reply Filter
 
 一个用于 X / Twitter 状态页的本地 userscript。它会在帖子详情页扫描主帖下方回复，并根据归一化文本和本地垃圾分数模型隐藏疑似垃圾回复。
 
@@ -12,7 +12,7 @@
 ## 安装
 
 1. 安装 Tampermonkey、Violentmonkey 或同类 userscript 管理器。
-2. 推荐直接从 Greasy Fork 安装：<https://greasyfork.org/en/scripts/576877-x-strict-reply-regex-filter>。
+2. 推荐直接从 Greasy Fork 安装：<https://greasyfork.org/en/scripts/576877-x-strict-reply-filter>。
 3. 也可以新建脚本并粘贴 `x-strict-reply-filter.user.js` 的全部内容。
 4. 保存后打开 `https://x.com/*` 或 `https://twitter.com/*` 的帖子详情页。
 
