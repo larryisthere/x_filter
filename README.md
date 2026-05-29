@@ -22,11 +22,10 @@
 
 ## 安装 Chrome extension 版
 
-1. 打开 Chrome 的 `chrome://extensions`。
-2. 开启开发者模式。
-3. 选择“加载已解压的扩展程序”。
-4. 选择本仓库的 `extension` 目录。
-5. 打开 `https://x.com/*` 或 `https://twitter.com/*` 的帖子详情页。
+1. 推荐直接从 Chrome Web Store 安装：<https://chromewebstore.google.com/detail/x-strict-reply-filter/ladfhgfmndhofgfmmkbbpomnefpfgiog>。
+2. 安装后打开 `https://x.com/*` 或 `https://twitter.com/*` 的帖子详情页。
+
+如需本地开发调试，也可以打开 Chrome 的 `chrome://extensions`，开启开发者模式，选择“加载已解压的扩展程序”，然后选择本仓库的 `extension` 目录。
 
 第一版 Chrome extension 不提供 popup、options 或 side panel UI；安装后会按默认策略自动生效。
 
@@ -102,11 +101,10 @@ A local filter for X / Twitter status pages, available as both a userscript and 
 
 ## Chrome Extension Installation
 
-1. Open `chrome://extensions`.
-2. Enable Developer mode.
-3. Choose "Load unpacked".
-4. Select this repository's `extension` directory.
-5. Open a post detail page under `https://x.com/*` or `https://twitter.com/*`.
+1. Recommended: install directly from the Chrome Web Store: <https://chromewebstore.google.com/detail/x-strict-reply-filter/ladfhgfmndhofgfmmkbbpomnefpfgiog>.
+2. After installation, open a post detail page under `https://x.com/*` or `https://twitter.com/*`.
+
+For local development and debugging, you can also open `chrome://extensions`, enable Developer mode, choose "Load unpacked", and select this repository's `extension` directory.
 
 The first Chrome extension release does not expose a popup, options page, or side panel UI; it runs automatically with the default policy after installation.
 
