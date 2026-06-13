@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "X Strict Reply Filter",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Hide likely spam replies on X/Twitter status pages using local structural scoring.",
   "icons": {
     "16": "icons/icon-16.png",

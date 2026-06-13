@@ -61,6 +61,7 @@ function elementNode(tagName, childNodes = [], alt = '') {
 for (const testCase of cases) {
   const context = {
     authorName: testCase.authorName || '',
+    authorHandle: testCase.authorHandle || '',
   };
   const matched = core.matchRules(testCase.text, context);
   const score = core.getSpamScore(testCase.text, context);

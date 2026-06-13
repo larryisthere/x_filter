@@ -53,9 +53,19 @@ function getVisibleUserNameText(article) {
     .trim();
 }
 
+function getVisibleUserHandleText(article) {
+  const userName = article.querySelector('[data-testid="User-Name"]');
+  if (!userName) return '';
+
+  const text = getTextWithImageAlt(userName) || userName.innerText || '';
+  const match = text.match(/@([a-zA-Z0-9_]{3,20})\b/u);
+  return match ? match[1] : '';
+}
+
 global.XStrictReplyFilterDom = {
   getTextWithImageAlt,
   getVisibleTweetText,
   getVisibleUserNameText,
+  getVisibleUserHandleText,
 };
 })(globalThis);

@@ -43,6 +43,30 @@ node tests/run-real-world-cases.js
 
 The expected result is that all real-world cases pass. If tightening a rule causes a policy case to fail, either refine the rule or document why the policy boundary changed.
 
+## Deployment
+
+When the user asks to deploy, release, publish, or update the userscript / oilmonkey version:
+
+1. Confirm the intended version in `scripts/build-distributions.js`, `extension/manifest.json`, and the generated userscript header. Bump them together when publishing a new behavior.
+2. Run `node scripts/build-distributions.js` from the repo root.
+3. Run `node tests/run-real-world-cases.js` and ensure all cases pass.
+4. Commit the source changes and generated `userscript/x-strict-reply-filter.user.js` / `extension/dist/content.js` together.
+5. Push to GitHub `main`. Greasy Fork Source Syncing is already configured outside the repo to update the userscript from the pushed GitHub source via webhook, so do not paste script code into Greasy Fork unless the user explicitly asks for a manual fallback.
+
+When the user asks to publish the Chrome extension version:
+
+1. Complete the same version, build, and regression-test steps above.
+2. Build the upload package from the repo root:
+
+```sh
+node scripts/build-distributions.js
+mkdir -p dist
+cd extension
+zip -r ../dist/x-strict-reply-filter-chrome-<version>.zip manifest.json dist icons
+```
+
+3. Upload the generated zip to the Chrome Web Store Developer Dashboard for the existing extension listing, then submit it for review. If dashboard access or authentication is needed, ask the user to handle that browser step or explicitly approve using the browser.
+
 ## Changelog
 
 For every behavior change, add an entry to `CHANGELOG.md` with the next version section.

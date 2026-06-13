@@ -41,7 +41,7 @@ userscript 版和 Chrome extension 版建议二选一安装。如果同时安装
 node scripts/build-distributions.js
 mkdir -p dist
 cd extension
-zip -r ../dist/x-strict-reply-filter-chrome-1.6.0.zip manifest.json dist icons
+zip -r ../dist/x-strict-reply-filter-chrome-1.6.1.zip manifest.json dist icons
 ```
 
 生成的 zip 是发布产物，不提交到源码仓库。
@@ -74,6 +74,19 @@ node tests/run-real-world-cases.js
 ```
 
 测试用例直接验证 `src` 下的共用规则内核和 X DOM 文本提取逻辑。发布文件由 `scripts/build-distributions.js` 生成到 `userscript/` 和 `extension/dist/`。
+
+## 如何贡献
+
+规则调整请优先修改 `src/` 下的共享代码，并把真实漏网样本加入 `tests/real-world-cases.json`。修改后运行：
+
+```sh
+node scripts/build-distributions.js
+node tests/run-real-world-cases.js
+```
+
+`userscript/` 和 `extension/dist/` 是生成产物；提交行为变化时应包含对应生成文件，保持 userscript 与 Chrome extension 行为一致。
+
+维护者合并到主分支后，会通过已配置的发布流程更新 Greasy Fork 和 Chrome Web Store 版本。贡献者无需处理发布后台配置。
 
 ## 隐私
 
@@ -120,7 +133,7 @@ To generate the Chrome Web Store upload package locally, run:
 node scripts/build-distributions.js
 mkdir -p dist
 cd extension
-zip -r ../dist/x-strict-reply-filter-chrome-1.6.0.zip manifest.json dist icons
+zip -r ../dist/x-strict-reply-filter-chrome-1.6.1.zip manifest.json dist icons
 ```
 
 The generated zip is a release artifact and is not committed to the source repository.
@@ -153,6 +166,19 @@ node tests/run-real-world-cases.js
 ```
 
 The test runner validates the shared rule core and X DOM text extraction helpers under `src`. Distribution files are generated into `userscript/` and `extension/dist/` by `scripts/build-distributions.js`.
+
+## Contributing
+
+Rule changes should start in the shared code under `src/`, and real missed-spam samples should be added to `tests/real-world-cases.json`. After making changes, run:
+
+```sh
+node scripts/build-distributions.js
+node tests/run-real-world-cases.js
+```
+
+`userscript/` and `extension/dist/` are generated artifacts; behavior changes should include the corresponding generated files so the userscript and Chrome extension stay aligned.
+
+After maintainers merge to the main branch, the configured release flow updates the Greasy Fork and Chrome Web Store versions. Contributors do not need to handle release-dashboard configuration.
 
 ## Privacy
 

@@ -909,5 +909,159 @@
     "text": "6🏀🎉",
     "expectedHidden": true,
     "expectedMinScore": 7
+  },
+  {
+    "id": "v1.6.1-role-contrast-nurse-mention",
+    "kind": "real-spam",
+    "versionIntroduced": "1.6.1",
+    "source": "user screenshot https://x.com/mrliziphoto/status/2065323047226347769",
+    "authorName": "Havva Şen Er",
+    "authorHandle": "68havvasener",
+    "text": "30+的_体制内护士 玩的就是返差 @6QQQ0`",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.6.1-late-night-comfort-bait",
+    "kind": "real-spam",
+    "versionIntroduced": "1.6.1",
+    "source": "user screenshot https://x.com/mrliziphoto/status/2065323047226347769",
+    "authorName": "櫻花小兔",
+    "authorHandle": "penny_broo99017",
+    "text": "🕷夜深了,想舒服一下🙂",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.6.1-want-comfort-bait",
+    "kind": "real-spam",
+    "versionIntroduced": "1.6.1",
+    "source": "user screenshot https://x.com/mrliziphoto/status/2065323047226347769",
+    "authorName": "小若若 ♡",
+    "authorHandle": "NellyTess66428",
+    "text": "🧧想要呀,想舒服一下😭",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.6.1-hug-me-alone-bait",
+    "kind": "real-spam",
+    "versionIntroduced": "1.6.1",
+    "source": "user screenshot https://x.com/mrliziphoto/status/2065323047226347769",
+    "authorName": "闪闪酱",
+    "authorHandle": "HuxleyCher46521",
+    "text": "🚚想被抱紧,一个人🙀",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.6.1-online-comfort-me-bait",
+    "kind": "real-spam",
+    "versionIntroduced": "1.6.1",
+    "source": "user screenshot https://x.com/mrliziphoto/status/2065323047226347769",
+    "authorName": "泡芙芙",
+    "authorHandle": "UlaGrey73757",
+    "text": "👉在线等,想被哄哄🤭",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.6.1-please-today-bait",
+    "kind": "real-spam",
+    "versionIntroduced": "1.6.1",
+    "source": "user screenshot https://x.com/mrliziphoto/status/2065323047226347769",
+    "authorName": "偶尔有点坏",
+    "authorHandle": "london_gem62413",
+    "text": "🍮求求了,今天😛",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.6.1-giggle-uncomfortable-bait",
+    "kind": "real-spam",
+    "versionIntroduced": "1.6.1",
+    "source": "user screenshot https://x.com/mrliziphoto/status/2065323047226347769",
+    "authorName": "小欣甘",
+    "authorHandle": "IiiMona31719",
+    "text": "🍈嘻嘻,有点难受🍰",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.6.1-today-online-bait",
+    "kind": "real-spam",
+    "versionIntroduced": "1.6.1",
+    "source": "user screenshot https://x.com/mrliziphoto/status/2065323047226347769",
+    "authorName": "梦幻兔姬",
+    "authorHandle": "PennGenevi41116",
+    "text": "🤓今天,在线🦖",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.6.1-comfort-bait-exact-fragment",
+    "kind": "derived-regression",
+    "versionIntroduced": "1.6.1",
+    "source": "derived from user policy decision",
+    "authorName": "櫻花小兔",
+    "authorHandle": "penny_broo99017",
+    "text": "🕷舒服一下🙂",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.6.1-online-wait-bait-exact-fragment",
+    "kind": "derived-regression",
+    "versionIntroduced": "1.6.1",
+    "source": "derived from user policy decision",
+    "authorName": "泡芙芙",
+    "authorHandle": "UlaGrey73757",
+    "text": "👉在线等🤭",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.6.1-normal-handle-today-online-emoji",
+    "kind": "policy",
+    "versionIntroduced": "1.6.1",
+    "source": "derived false-positive boundary",
+    "authorName": "普通用户",
+    "authorHandle": "reader",
+    "text": "🤓今天,在线🦖",
+    "expectedHidden": false,
+    "expectedMaxScore": 6
+  },
+  {
+    "id": "v1.6.1-normal-handle-late-night-comfort",
+    "kind": "policy",
+    "versionIntroduced": "1.6.1",
+    "source": "derived false-positive boundary",
+    "authorName": "普通用户",
+    "authorHandle": "night_reader",
+    "text": "🕷夜深了,想舒服一下🙂",
+    "expectedHidden": false,
+    "expectedMaxScore": 6
+  },
+  {
+    "id": "v1.6.1-normal-handle-comfort-fragment",
+    "kind": "policy",
+    "versionIntroduced": "1.6.1",
+    "source": "derived false-positive boundary",
+    "authorName": "普通用户",
+    "authorHandle": "night_reader",
+    "text": "🕷舒服一下🙂",
+    "expectedHidden": false,
+    "expectedMaxScore": 6
+  },
+  {
+    "id": "v1.6.1-normal-handle-online-wait-fragment",
+    "kind": "policy",
+    "versionIntroduced": "1.6.1",
+    "source": "derived false-positive boundary",
+    "authorName": "普通用户",
+    "authorHandle": "reader",
+    "text": "👉在线等🤭",
+    "expectedHidden": false,
+    "expectedMaxScore": 6
   }
 ]

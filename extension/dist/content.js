@@ -16,6 +16,9 @@ const TEXT_PATTERNS = {
   englishPunchlineSkeleton: /(?:itwas|hesang|shesang|because|soit|nowthe|nowim|itsaid|laughingstock|alreadyfull|overworked|offkey)/,
   knownEnglishJokeSpamSkeleton: /(?:itriedtoplayfootballitrippedovertheballnowimalaughingstock|itriedtochargemyphoneitsaidimalreadyfullofyourmemes)/,
   chineseFillerTemplate: /(赴暖而行无半分寒凉|岁月温柔从未有彷徨|岁月安然万事皆可期|清风携喜漫过朝暮间|风暖岁安事事皆顺遂)/u,
+  softIntimacyBait: /(舒服一下|想被抱紧|想被哄哄|求求了今天|嘻嘻有点难受)/u,
+  lowValueAvailabilityBait: /(今天在线|在线等)/u,
+  roleContrastMentionBait: /(体制内护士|护士).*(玩的就是)?(反差|返差)|(反差|返差).*(体制内护士|护士)/u,
 };
 
 const PROFILE_PATTERNS = {
@@ -174,6 +177,33 @@ const SCORE_RULES = [
       length <= 100 &&
       TEXT_PATTERNS.chineseFillerTemplate.test(text) &&
       (emojiCount >= 1 || hasRandomLatinPrefix),
+  },
+  {
+    points: 4,
+    reason: 'generated handle chinese intimacy bait combo',
+    test: ({ length, text, emojiCount, hasGeneratedAuthorHandle }) =>
+      length <= 40 &&
+      hasGeneratedAuthorHandle &&
+      emojiCount >= 1 &&
+      TEXT_PATTERNS.softIntimacyBait.test(text),
+  },
+  {
+    points: 4,
+    reason: 'generated handle chinese availability bait combo',
+    test: ({ length, text, emojiCount, hasGeneratedAuthorHandle }) =>
+      length <= 12 &&
+      hasGeneratedAuthorHandle &&
+      emojiCount >= 2 &&
+      TEXT_PATTERNS.lowValueAvailabilityBait.test(text),
+  },
+  {
+    points: 4,
+    reason: 'generated handle role contrast mention combo',
+    test: ({ length, text, hasMention, hasGeneratedAuthorHandle }) =>
+      length <= 80 &&
+      hasGeneratedAuthorHandle &&
+      hasMention &&
+      TEXT_PATTERNS.roleContrastMentionBait.test(text),
   },
   {
     points: 6,
@@ -441,6 +471,38 @@ function getLatinSkeleton(text) {
     .replace(/[^a-z0-9]+/g, '');
 }
 
+function normalizeAuthorHandle(handle) {
+  return String(handle || '')
+    .normalize('NFKC')
+    .replace(/^@+/, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9_]/g, '');
+}
+
+function buildAuthorHandleSignals(authorHandle) {
+  const text = normalizeAuthorHandle(authorHandle);
+  const trailingDigits = (text.match(/\d+$/) || [''])[0];
+  const leadingDigits = (text.match(/^\d+/) || [''])[0];
+  const beforeTrailingDigits = trailingDigits
+    ? text.slice(0, -trailingDigits.length)
+    : text;
+  const afterLeadingDigits = leadingDigits
+    ? text.slice(leadingDigits.length)
+    : text;
+  const beforeTrailingDigitLetterCount = countLatinLetters(beforeTrailingDigits);
+  const afterLeadingDigitLetterCount = countLatinLetters(afterLeadingDigits);
+
+  return {
+    text,
+    hasGeneratedAuthorHandle:
+      text.length >= 8 &&
+      (
+        (trailingDigits.length >= 5 && beforeTrailingDigitLetterCount >= 5) ||
+        (leadingDigits.length >= 2 && afterLeadingDigitLetterCount >= 5)
+      ),
+  };
+}
+
 function hasHan(text) {
   return /\p{Script=Han}/u.test(text);
 }
@@ -485,6 +547,7 @@ function buildTextSignals(originalText) {
     hasRandomLatinPrefix,
     hasRandomLatinSuffix,
     hasRandomAlphaNumSuffix,
+    hasGeneratedAuthorHandle: false,
     isLatinDominant: latinLetterCount >= 18 && latinLetterCount / rawCharCount >= 0.35,
     hasEmojiFlood: emojiCount >= 5 || emojiCount / rawCharCount >= 0.12,
   };
@@ -500,12 +563,15 @@ function applyScoreRules(result, signals, rules, reasonPrefix = '') {
 
 function getSpamScore(originalText, context = {}) {
   const signals = buildTextSignals(originalText);
+  const handleSignals = buildAuthorHandleSignals(context.authorHandle);
+  signals.hasGeneratedAuthorHandle = handleSignals.hasGeneratedAuthorHandle;
 
   const result = {
     score: 0,
     reasons: [],
     normalizedText: signals.text,
     normalizedProfileText: '',
+    normalizedAuthorHandle: handleSignals.text,
   };
 
   if (signals.text || signals.emojiCount > 0) {
@@ -527,17 +593,19 @@ function getSpamScore(originalText, context = {}) {
 function matchRules(originalText, context = {}, options = {}) {
   const text = normalizeTextForFilter(originalText);
   const profileText = normalizeTextForFilter(context.authorName);
+  const authorHandle = normalizeAuthorHandle(context.authorHandle);
   const spam = getSpamScore(originalText, context);
   const threshold = Number.isFinite(options.spamScoreThreshold)
     ? options.spamScoreThreshold
     : DEFAULT_SPAM_SCORE_THRESHOLD;
-  if (!text && !profileText && spam.score < threshold) return null;
+  if (!text && !profileText && !authorHandle && spam.score < threshold) return null;
 
   if (spam.score >= threshold) {
     return {
       name: `spam score ${spam.score}: ${spam.reasons.join(', ')}`,
       normalizedText: spam.normalizedText,
       normalizedProfileText: spam.normalizedProfileText,
+      normalizedAuthorHandle: spam.normalizedAuthorHandle,
     };
   }
 
@@ -547,6 +615,8 @@ function matchRules(originalText, context = {}, options = {}) {
 global.XStrictReplyFilterCore = {
   DEFAULT_SPAM_SCORE_THRESHOLD,
   normalizeTextForFilter,
+  normalizeAuthorHandle,
+  buildAuthorHandleSignals,
   buildTextSignals,
   getSpamScore,
   matchRules,
@@ -608,10 +678,20 @@ function getVisibleUserNameText(article) {
     .trim();
 }
 
+function getVisibleUserHandleText(article) {
+  const userName = article.querySelector('[data-testid="User-Name"]');
+  if (!userName) return '';
+
+  const text = getTextWithImageAlt(userName) || userName.innerText || '';
+  const match = text.match(/@([a-zA-Z0-9_]{3,20})\b/u);
+  return match ? match[1] : '';
+}
+
 global.XStrictReplyFilterDom = {
   getTextWithImageAlt,
   getVisibleTweetText,
   getVisibleUserNameText,
+  getVisibleUserHandleText,
 };
 })(globalThis);
 
@@ -724,11 +804,11 @@ function startXStrictReplyFilter(options = {}) {
     return Math.abs(hash).toString(36);
   }
 
-  function getReplyCounterKey(article, text, authorName) {
+  function getReplyCounterKey(article, text, authorName, authorHandle) {
     const permalinkPath = getTweetPermalinkPath(article);
     if (permalinkPath) return `path:${permalinkPath}`;
 
-    return `fallback:${getStableHash(`${authorName || ''}\n${text || ''}`)}`;
+    return `fallback:${getStableHash(`${authorName || ''}\n${authorHandle || ''}\n${text || ''}`)}`;
   }
 
   function resetFilterCounterForPath(statusPath) {
@@ -977,12 +1057,13 @@ function startXStrictReplyFilter(options = {}) {
 
       const text = dom.getVisibleTweetText(article);
       const authorName = dom.getVisibleUserNameText(article);
-      if (!text && !authorName) return;
+      const authorHandle = dom.getVisibleUserHandleText(article);
+      if (!text && !authorName && !authorHandle) return;
 
-      const matchedRule = core.matchRules(text, { authorName }, { spamScoreThreshold: SPAM_SCORE_THRESHOLD });
+      const matchedRule = core.matchRules(text, { authorName, authorHandle }, { spamScoreThreshold: SPAM_SCORE_THRESHOLD });
       if (!matchedRule) return;
 
-      const counterKey = getReplyCounterKey(article, text, authorName);
+      const counterKey = getReplyCounterKey(article, text, authorName, authorHandle);
       hideReply(article, matchedRule, counterKey);
     });
 
@@ -1099,6 +1180,6 @@ global.XStrictReplyFilterPage = {
 
   globalThis.XStrictReplyFilterPage.start({
     runtimeName: 'chrome-extension',
-    version: '1.6.0',
+    version: '1.6.1',
   });
 })();

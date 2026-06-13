@@ -107,11 +107,11 @@ function startXStrictReplyFilter(options = {}) {
     return Math.abs(hash).toString(36);
   }
 
-  function getReplyCounterKey(article, text, authorName) {
+  function getReplyCounterKey(article, text, authorName, authorHandle) {
     const permalinkPath = getTweetPermalinkPath(article);
     if (permalinkPath) return `path:${permalinkPath}`;
 
-    return `fallback:${getStableHash(`${authorName || ''}\n${text || ''}`)}`;
+    return `fallback:${getStableHash(`${authorName || ''}\n${authorHandle || ''}\n${text || ''}`)}`;
   }
 
   function resetFilterCounterForPath(statusPath) {
@@ -360,12 +360,13 @@ function startXStrictReplyFilter(options = {}) {
 
       const text = dom.getVisibleTweetText(article);
       const authorName = dom.getVisibleUserNameText(article);
-      if (!text && !authorName) return;
+      const authorHandle = dom.getVisibleUserHandleText(article);
+      if (!text && !authorName && !authorHandle) return;
 
-      const matchedRule = core.matchRules(text, { authorName }, { spamScoreThreshold: SPAM_SCORE_THRESHOLD });
+      const matchedRule = core.matchRules(text, { authorName, authorHandle }, { spamScoreThreshold: SPAM_SCORE_THRESHOLD });
       if (!matchedRule) return;
 
-      const counterKey = getReplyCounterKey(article, text, authorName);
+      const counterKey = getReplyCounterKey(article, text, authorName, authorHandle);
       hideReply(article, matchedRule, counterKey);
     });
 

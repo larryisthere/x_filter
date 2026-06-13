@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.6.1 - 2026-06-13
+
+- Added regression coverage for the Chinese short-template spam batch under `mrliziphoto/status/2065323047226347769`.
+- Extracted visible author handles from X reply DOM nodes and pass them into the shared score model.
+- Added high-confidence combo scoring for generated-looking handles paired with short Chinese intimacy / availability bait, exact `舒服一下` / `在线等` fragments, or nurse-role contrast mention bait.
+- Documented the public contribution flow and the agent-facing deployment flow for userscript and Chrome extension releases.
+
 ## 1.6.0 - 2026-05-10
 
 - Added a first Chrome extension distribution that runs automatically on X/Twitter status pages without popup, options, or side-panel UI.
