@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X Strict Reply Filter
 // @namespace    local.x.strict.reply.filter
-// @version      1.6.1
+// @version      1.6.2
 // @description  Strictly filter spam/NSFW-style replies on X/Twitter status pages using normalization, structural signals, and a local spam score model.
 // @author       larryisthere
 // @license      MIT
@@ -22,7 +22,7 @@ const TEXT_PATTERNS = {
   relationshipBait: /(主人|哥哥|弟弟|姐姐|妹妹|小狗|抱抱|领我|认领|疼人|疼我|宠我|搭子|会疼人|单身哥哥|单身姐姐|真人)/u,
   actionBait: /(快来|找个|想找|在线找|来找|看她|主页|点我主页|看我主页|看我置顶|置顶|线下|私信|加我|跟你玩|想玩|陪你玩|陪我玩|来领|资源自取|真实对接|同城约见|同城|牵线|入口|社区|自取)/u,
   nsfwBait: /(骚|sao|骚货|sao货|涩|色|好涩|好色|涩播|色播|约|约p|约炮|炮|可约|能约|日过|操过|睡过|打飞机|能冲|不行了|没她骚|她骚|母狗|无偿线下|免费线下)/u,
-  templateBait: /(小狗求主人抱抱|主人快来领我|快来领我|主人.*领我|主人.*认领|想找会疼人的哥哥|会疼人的哥哥|疼人的哥哥|找.*疼人的哥哥|有弟弟线下吗|找弟弟线下|小狗在线找主人|小狗想跟你玩|找个长期搭子|长期搭子|比她好看的没她骚|比她骚的没她好看|好看的没她骚|骚的没她好看|没她骚|没人比她sao|没人比她骚|sao货|骚货|骚huo|她好涩|好涩我不行了|全国牵线|资源自取|1-5线资源|一到五线资源|点我主页|看我主页|主页自取|看我置顶|点我置顶|同城约p|同城约炮|真实对接|约炮入口|线下真实|靠谱社区|真实同城约见|今晚准时涩播|母狗找主人|无偿线下)/u,
+  templateBait: /(小狗求主人抱抱|主人快来领我|快来领我|主人.*领我|主人.*认领|想找会疼人的哥哥|会疼人的哥哥|疼人的哥哥|找.*疼人的哥哥|有弟弟线下吗|找弟弟线下|小狗在线找主人|小狗想跟你玩|找个长期搭子|长期搭子|来陪我|比她好看的没她骚|比她骚的没她好看|好看的没她骚|骚的没她好看|没她骚|没人比她sao|没人比她骚|sao货|骚货|骚huo|她好涩|好涩我不行了|全国牵线|资源自取|1-5线资源|一到五线资源|点我主页|看我主页|主页自取|看我置顶|点我置顶|同城约p|同城约炮|真实对接|约炮入口|线下真实|靠谱社区|真实同城约见|今晚准时涩播|母狗找主人|无偿线下)/u,
   englishJoke: /\b(?:why\s+did|i\s+tried\s+to|i\s+tried|why\s+was|why\s+is)\b/i,
   englishPunchline: /\b(?:it\s+was|he\s+sang|she\s+sang|because|so\s+it|now\s+the)\b/i,
   englishJokeSkeleton: /(?:whydid|whywas|whyis|itriedto|itried)/,
@@ -1193,6 +1193,6 @@ global.XStrictReplyFilterPage = {
 
   globalThis.XStrictReplyFilterPage.start({
     runtimeName: 'userscript',
-    version: '1.6.1',
+    version: '1.6.2',
   });
 })();

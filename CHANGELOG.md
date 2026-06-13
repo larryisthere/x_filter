@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.2 - 2026-06-13
+
+- Added direct high-confidence coverage for public-reply invitation bait containing `来陪我`.
+- Added regression coverage for the latest screenshot pair, while preserving the reported dream/waist sentence as a keep-visible boundary because it lacks a reusable spam signal.
+
 ## 1.6.1 - 2026-06-13
 
 - Added regression coverage for the Chinese short-template spam batch under `mrliziphoto/status/2065323047226347769`.

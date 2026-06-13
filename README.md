@@ -41,7 +41,7 @@ userscript 版和 Chrome extension 版建议二选一安装。如果同时安装
 node scripts/build-distributions.js
 mkdir -p dist
 cd extension
-zip -r ../dist/x-strict-reply-filter-chrome-1.6.1.zip manifest.json dist icons
+zip -r ../dist/x-strict-reply-filter-chrome-1.6.2.zip manifest.json dist icons
 ```
 
 生成的 zip 是发布产物，不提交到源码仓库。
@@ -133,7 +133,7 @@ To generate the Chrome Web Store upload package locally, run:
 node scripts/build-distributions.js
 mkdir -p dist
 cd extension
-zip -r ../dist/x-strict-reply-filter-chrome-1.6.1.zip manifest.json dist icons
+zip -r ../dist/x-strict-reply-filter-chrome-1.6.2.zip manifest.json dist icons
 ```
 
 The generated zip is a release artifact and is not committed to the source repository.

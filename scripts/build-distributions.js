@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const repoRoot = path.resolve(__dirname, '..');
-const version = '1.6.1';
+const version = '1.6.2';
 const sourceFiles = [
   'src/filter-core.js',
   'src/dom-extract.js',

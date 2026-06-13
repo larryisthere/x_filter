@@ -1063,5 +1063,36 @@
     "text": "👉在线等🤭",
     "expectedHidden": false,
     "expectedMaxScore": 6
+  },
+  {
+    "id": "v1.6.2-dream-waist-gaze-no-reusable-signal",
+    "kind": "policy",
+    "versionIntroduced": "1.6.2",
+    "source": "user screenshot keep-visible boundary",
+    "authorName": "JOSE YOLA",
+    "authorHandle": "joseyola360",
+    "text": "这谁顶得住啊，晚上做梦全是你的身影，这腰我眼神根本挪不开。",
+    "expectedHidden": false,
+    "expectedMaxScore": 6
+  },
+  {
+    "id": "v1.6.2-come-keep-me-company-after-breakup",
+    "kind": "real-spam",
+    "versionIntroduced": "1.6.2",
+    "source": "user screenshot",
+    "authorName": "菠萝猫",
+    "authorHandle": "DorothyF99012",
+    "text": "🧇来陪我,刚分手😮",
+    "expectedHidden": true,
+    "expectedMinScore": 7
+  },
+  {
+    "id": "v1.6.2-come-keep-me-company-exact-fragment",
+    "kind": "derived-regression",
+    "versionIntroduced": "1.6.2",
+    "source": "derived from user policy decision",
+    "text": "来陪我",
+    "expectedHidden": true,
+    "expectedMinScore": 7
   }
 ]
